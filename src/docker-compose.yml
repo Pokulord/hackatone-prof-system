@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_NAME=plusoedi
+
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=plusoedi
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/sql/schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
+      - ./src/sql/migrations.sql:/docker-entrypoint-initdb.d/2_migrations.sql
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
