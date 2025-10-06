@@ -163,7 +163,7 @@ void MainWindow::onShowPasswordToggled(bool checked)
 void MainWindow::onLoginClicked()
 {
     const QString username = ui->usernameEdit->text();
-    const QString password = ui->passwordEdit->text();
+    QString password = ui->passwordEdit->text();
 
     if (username.isEmpty()) {
         ui->errorLabel->setText("Введите логин");
@@ -179,16 +179,14 @@ void MainWindow::onLoginClicked()
         return;
     }
 
-    bool authSuccess = authenticateUser(username, password);
-
-    password.fill('0');
-
-    if (authSuccess) {
+    // TODO: связь с API
+    if (username == "admin" && password == "admin"){
         handleSuccessfulLogin();
     } else {
         handleFailedLogin();
-        addLoginAttempt(username);
     }
+
+    password.fill('0');
 }
 
 void MainWindow::handleSuccessfulLogin()
@@ -202,19 +200,6 @@ void MainWindow::handleFailedLogin()
 {
     ui->errorLabel->setText("Неверный логин или пароль");
     ui->errorLabel->setVisible(true);
-}
-
-void MainWindow::addLoginAttempt(const QString& username)
-{
-    failedAttempts[username]++;
-    if (failedAttempts[username] >= 5) {
-        ui->errorLabel->setText("Слишком много попыток. Попробуйте через 5 минут");
-        ui->loginButton->setEnabled(false);
-        QTimer::singleShot(300000, this, [this]() { // 5 минут
-            ui->loginButton->setEnabled(true);
-            failedAttempts.clear();
-        });
-    }
 }
 
 MainWindow::~MainWindow()
