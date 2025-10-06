@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef AUTH_WINDOW_H
+#define AUTH_WINDOW_H
 
 #include <QMainWindow>
 
@@ -24,4 +24,4 @@ class MainWindow : public QMainWindow
     private slots:
         void onLoginClicked();
 };
-#endif // MAINWINDOW_H
+#endif
