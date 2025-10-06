@@ -21,7 +21,8 @@ RUN /vcpkg/vcpkg install \
     openssl \
     bcrypt \
     crow \
-    nlohmann-json
+    nlohmann-json \
+    cpp-uuid
 
 # Set up the build directory
 WORKDIR /app
@@ -45,10 +46,10 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy the compiled application from the builder stage
-COPY --from=builder /app/build/plusoedi .
+COPY --from=builder /app/build/MyApp .
 
 # Expose the port the application runs on
 EXPOSE 8080
 
 # Run the application
-CMD ["./plusoedi"]
+CMD ["./MyApp"]
