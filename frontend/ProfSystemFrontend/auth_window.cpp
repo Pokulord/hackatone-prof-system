@@ -8,23 +8,97 @@
 #include <QLabel>
 #include <QDebug>
 
+// Константы стилей
+namespace StyleConstants {
+const QString FONT_FAMILY = "Arial";
+const int DEFAULT_FONT_SIZE = 12;
+const int SMALL_FONT_SIZE = 10;
+
+const QString PRIMARY_COLOR = "#3498db";
+const QString HOVER_COLOR = "#2980b9";
+const QString PRESSED_COLOR = "#21618c";
+const QString ERROR_COLOR = "#d32f2f";
+const QString BORDER_COLOR = "#bdc3c7";
+const QString TEXT_COLOR = "#7f8c8d";
+
+const QString BUTTON_STYLE =
+    "QPushButton {"
+    "background: %1;"
+    "color: white;"
+    "border: none;"
+    "padding: 12px 30px;"
+    "border-radius: 5px;"
+    "font-size: 12pt;"
+    "font-weight: bold;"
+    "min-width: 120px;"
+    "outline: none;"
+    "}"
+    "QPushButton:hover { background: %2; }"
+    "QPushButton:pressed { background: %3; }";
+
+const QString LINE_EDIT_STYLE =
+    "QLineEdit {"
+    "padding: 8px;"
+    "border: 2px solid %1;"
+    "border-radius: 5px;"
+    "font-size: 12pt;"
+    "}"
+    "QLineEdit:focus { border-color: %2; }";
+
+const QString CHECKBOX_STYLE =
+    "QCheckBox {"
+    "font-size: 10pt;"
+    "color: %1;"
+    "outline: none;"
+    "}"
+    "QCheckBox::indicator {"
+    "width: 16px;"
+    "height: 16px;"
+    "}"
+    "QCheckBox::indicator:unchecked {"
+    "border: 2px solid %2;"
+    "border-radius: 3px;"
+    "}"
+    "QCheckBox::indicator:checked {"
+    "background: %3;"
+    "border: 2px solid %3;"
+    "}"
+    "QCheckBox:focus {"
+    "outline: none;"
+    "border: none;"
+    "}";
+}
+
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    initializeWindow();
+    setupStyles();
+    setupLayout();
+    setupConnections();
+}
 
+void MainWindow::initializeWindow()
+{
     setWindowTitle("Прософт - Авторизация");
-
     setWindowIcon(QIcon("B:/hackatone-prof-system/frontend/ProfSystemFrontend/resources/logo.jpg"));
 
+    // Настройка errorLabel
     ui->errorLabel->setMinimumHeight(0);
     ui->errorLabel->setMaximumHeight(30);
     ui->errorLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    ui->errorLabel->setStyleSheet(QString("color: %1;").arg(StyleConstants::ERROR_COLOR));
+    ui->errorLabel->setVisible(false);
+}
 
-    QFont defaultFont("Arial", 12);
-    QFont smallFont("Arial", 10);
+void MainWindow::setupStyles()
+{
+    QFont defaultFont(StyleConstants::FONT_FAMILY, StyleConstants::DEFAULT_FONT_SIZE);
+    QFont smallFont(StyleConstants::FONT_FAMILY, StyleConstants::SMALL_FONT_SIZE);
 
+    // Установка шрифтов
     ui->usernameLabel->setFont(defaultFont);
     ui->passwordLabel->setFont(defaultFont);
     ui->usernameEdit->setFont(defaultFont);
@@ -33,71 +107,38 @@ MainWindow::MainWindow(QWidget *parent)
     ui->showPasswordCheckbox->setFont(smallFont);
     ui->errorLabel->setFont(smallFont);
 
-    ui->errorLabel->setStyleSheet("color: #d32f2f;");
-    ui->errorLabel->setVisible(false);
-
+    // Установка стилей
     ui->loginButton->setStyleSheet(
-        "QPushButton {"
-            "background: #3498db;"
-            "color: white;"
-            "border: none;"
-            "padding: 12px 30px;"
-            "border-radius: 5px;"
-            "font-size: 12pt;"
-            "font-weight: bold;"
-            "min-width: 120px;"
-            "outline: none;"
-        "}"
-        "QPushButton:hover { background: #2980b9; }"
-        "QPushButton:pressed { background: #21618c; }"
-    );
+        StyleConstants::BUTTON_STYLE
+            .arg(StyleConstants::PRIMARY_COLOR)
+            .arg(StyleConstants::HOVER_COLOR)
+            .arg(StyleConstants::PRESSED_COLOR)
+        );
 
     ui->showPasswordCheckbox->setStyleSheet(
-        "QCheckBox {"
-            "font-size: 10pt;"
-            "color: #7f8c8d;"
-            "outline: none;"
-        "}"
-        "QCheckBox::indicator {"
-            "width: 16px;"
-            "height: 16px;"
-        "}"
-        "QCheckBox::indicator:unchecked {"
-            "border: 2px solid #bdc3c7;"
-            "border-radius: 3px;"
-        "}"
-        "QCheckBox::indicator:checked {"
-            "background: #3498db;"
-            "border: 2px solid #3498db;"
-        "}"
-        "QCheckBox:focus {"
-            "outline: none;"
-            "border: none;"
-        "}"
+        StyleConstants::CHECKBOX_STYLE
+            .arg(StyleConstants::TEXT_COLOR)
+            .arg(StyleConstants::BORDER_COLOR)
+            .arg(StyleConstants::PRIMARY_COLOR)
         );
 
     ui->usernameEdit->setStyleSheet(
-        "QLineEdit {"
-            "padding: 8px;"
-            "border: 2px solid #bdc3c7;"
-            "border-radius: 5px;"
-            "font-size: 12pt;"
-        "}"
-        "QLineEdit:focus { border-color: #3498db; }"
-    );
+        StyleConstants::LINE_EDIT_STYLE
+            .arg(StyleConstants::BORDER_COLOR)
+            .arg(StyleConstants::PRIMARY_COLOR)
+        );
 
     ui->passwordEdit->setStyleSheet(
-        "QLineEdit {"
-            "padding: 8px;"
-            "border: 2px solid #bdc3c7;"
-            "border-radius: 5px;"
-            "font-size: 12pt;"
-        "}"
-        "QLineEdit:focus { border-color: #3498db; }"
-    );
+        StyleConstants::LINE_EDIT_STYLE
+            .arg(StyleConstants::BORDER_COLOR)
+            .arg(StyleConstants::PRIMARY_COLOR)
+        );
 
     ui->passwordEdit->setEchoMode(QLineEdit::Password);
+}
 
+void MainWindow::setupLayout()
+{
     QHBoxLayout *horizontalLayout = new QHBoxLayout(ui->centralwidget);
     QVBoxLayout *verticalLayout = new QVBoxLayout();
 
@@ -108,26 +149,43 @@ MainWindow::MainWindow(QWidget *parent)
     verticalLayout->addStretch();
     verticalLayout->addWidget(ui->groupBox);
     verticalLayout->addStretch();
+}
 
+void MainWindow::setupConnections()
+{
     connect(ui->loginButton, &QPushButton::clicked, this, &MainWindow::onLoginClicked);
+    connect(ui->showPasswordCheckbox, &QCheckBox::toggled, this, &MainWindow::onShowPasswordToggled);
+}
 
-    connect(ui->showPasswordCheckbox, &QCheckBox::toggled, [this](bool checked) {
-        ui->passwordEdit->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
-    });
+void MainWindow::onShowPasswordToggled(bool checked)
+{
+    ui->passwordEdit->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
 }
 
 void MainWindow::onLoginClicked()
 {
-    QString username = ui->usernameEdit->text();
-    QString password = ui->passwordEdit->text();
+    const QString username = ui->usernameEdit->text();
+    const QString password = ui->passwordEdit->text();
+
+    // Временная заглушка для демонстрации
     if (username == "admin" && password == "admin") {
-        qDebug() << "Успешный вход!";
-        ui->errorLabel->setVisible(false);
+        handleSuccessfulLogin();
+    } else {
+        handleFailedLogin();
     }
-    else {
-        ui->errorLabel->setText("Неверный логин или пароль");
-        ui->errorLabel->setVisible(true);
-    }
+}
+
+void MainWindow::handleSuccessfulLogin()
+{
+    qDebug() << "Успешный вход!";
+    ui->errorLabel->setVisible(false);
+    // TODO: Переход к главному окну
+}
+
+void MainWindow::handleFailedLogin()
+{
+    ui->errorLabel->setText("Неверный логин или пароль");
+    ui->errorLabel->setVisible(true);
 }
 
 MainWindow::~MainWindow()

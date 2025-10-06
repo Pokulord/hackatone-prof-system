@@ -6,7 +6,7 @@
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
-    class MainWindow;
+class MainWindow;
 }
 QT_END_NAMESPACE
 
@@ -14,14 +14,21 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    public:
-        MainWindow(QWidget *parent = nullptr);
-        ~MainWindow();
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
-    private:
-        Ui::MainWindow *ui;
+private slots:
+    void onLoginClicked();
+    void onShowPasswordToggled(bool checked);
 
-    private slots:
-        void onLoginClicked();
+private:
+    Ui::MainWindow *ui;
+    void initializeWindow();
+    void setupStyles();
+    void setupLayout();
+    void setupConnections();
+    void handleSuccessfulLogin();
+    void handleFailedLogin();
 };
 #endif
