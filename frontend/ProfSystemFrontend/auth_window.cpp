@@ -8,7 +8,6 @@
 #include <QLabel>
 #include <QDebug>
 
-// Константы стилей
 namespace StyleConstants {
 const QString FONT_FAMILY = "Arial";
 const int DEFAULT_FONT_SIZE = 12;
@@ -85,7 +84,6 @@ void MainWindow::initializeWindow()
     setWindowTitle("Прософт - Авторизация");
     setWindowIcon(QIcon("B:/hackatone-prof-system/frontend/ProfSystemFrontend/resources/logo.jpg"));
 
-    // Настройка errorLabel
     ui->errorLabel->setMinimumHeight(0);
     ui->errorLabel->setMaximumHeight(30);
     ui->errorLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -98,16 +96,16 @@ void MainWindow::setupStyles()
     QFont defaultFont(StyleConstants::FONT_FAMILY, StyleConstants::DEFAULT_FONT_SIZE);
     QFont smallFont(StyleConstants::FONT_FAMILY, StyleConstants::SMALL_FONT_SIZE);
 
-    // Установка шрифтов
     ui->usernameLabel->setFont(defaultFont);
     ui->passwordLabel->setFont(defaultFont);
     ui->usernameEdit->setFont(defaultFont);
     ui->passwordEdit->setFont(defaultFont);
+    ui->usernameEdit->setPlaceholderText("Введите логин...");
+    ui->passwordEdit->setPlaceholderText("Введите пароль...");
     ui->loginButton->setFont(defaultFont);
     ui->showPasswordCheckbox->setFont(smallFont);
     ui->errorLabel->setFont(smallFont);
 
-    // Установка стилей
     ui->loginButton->setStyleSheet(
         StyleConstants::BUTTON_STYLE
             .arg(StyleConstants::PRIMARY_COLOR)
@@ -167,11 +165,29 @@ void MainWindow::onLoginClicked()
     const QString username = ui->usernameEdit->text();
     const QString password = ui->passwordEdit->text();
 
-    // Временная заглушка для демонстрации
-    if (username == "admin" && password == "admin") {
+    if (username.isEmpty()) {
+        ui->errorLabel->setText("Введите логин");
+        ui->errorLabel->setVisible(true);
+        ui->usernameEdit->setFocus();
+        return;
+    }
+
+    if (password.isEmpty()) {
+        ui->errorLabel->setText("Введите пароль");
+        ui->errorLabel->setVisible(true);
+        ui->passwordEdit->setFocus();
+        return;
+    }
+
+    bool authSuccess = authenticateUser(username, password);
+
+    password.fill('0');
+
+    if (authSuccess) {
         handleSuccessfulLogin();
     } else {
         handleFailedLogin();
+        addLoginAttempt(username);
     }
 }
 
@@ -186,6 +202,19 @@ void MainWindow::handleFailedLogin()
 {
     ui->errorLabel->setText("Неверный логин или пароль");
     ui->errorLabel->setVisible(true);
+}
+
+void MainWindow::addLoginAttempt(const QString& username)
+{
+    failedAttempts[username]++;
+    if (failedAttempts[username] >= 5) {
+        ui->errorLabel->setText("Слишком много попыток. Попробуйте через 5 минут");
+        ui->loginButton->setEnabled(false);
+        QTimer::singleShot(300000, this, [this]() { // 5 минут
+            ui->loginButton->setEnabled(true);
+            failedAttempts.clear();
+        });
+    }
 }
 
 MainWindow::~MainWindow()
