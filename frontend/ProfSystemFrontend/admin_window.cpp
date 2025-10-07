@@ -1,45 +1,52 @@
-include "admin_window.h"
+#include "admin_window.h"
+#include "ui_admin_window.h"
+#include <QStatusBar>
 
-admin_window::admin_window(QObject *parent)
-    : QAbstractItemModel(parent)
-{}
-
-QVariant admin_window::headerData(int section, Qt::Orientation orientation, int role) const
+AdminWindow::AdminWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::AdminWindow)
 {
-    // FIXME: Implement me!
+    ui->setupUi(this);
+
+    setWindowTitle("Прософт - Панель администратора");
+    setWindowIcon(QIcon("B:/hackatone-prof-system/frontend/ProfSystemFrontend/resources/logo.jpg"));
+
+    centerContent();
+
+    connect(ui->statsButton, &QPushButton::clicked, this, &AdminWindow::onStatisticsClicked);
+    connect(ui->usersButton, &QPushButton::clicked, this, &AdminWindow::onUsersClicked);
+    connect(ui->sessionsButton, &QPushButton::clicked, this, &AdminWindow::onSessionsClicked);
+    connect(ui->auditButton, &QPushButton::clicked, this, &AdminWindow::onLogsClicked);
 }
 
-QModelIndex admin_window::index(int row, int column, const QModelIndex &parent) const
+void AdminWindow::centerContent()
 {
-    // FIXME: Implement me!
+    QGridLayout *grid = ui->gridLayout;
+    grid->setAlignment(Qt::AlignCenter);
+
+    // ИЛИ через центральный виджет
+    ui->centralwidget->setLayout(new QVBoxLayout());
+    ui->centralwidget->layout()->setAlignment(Qt::AlignCenter);
+    ui->centralwidget->layout()->addWidget(ui->centralwidget_2);
 }
 
-QModelIndex admin_window::parent(const QModelIndex &index) const
-{
-    // FIXME: Implement me!
+void AdminWindow::onStatisticsClicked() {
+    statusBar()->showMessage("Открыта статистика");
 }
 
-int admin_window::rowCount(const QModelIndex &parent) const
-{
-    if (!parent.isValid())
-        return 0;
-
-    // FIXME: Implement me!
+void AdminWindow::onUsersClicked() {
+    statusBar()->showMessage("Управление пользователями");
 }
 
-int admin_window::columnCount(const QModelIndex &parent) const
-{
-    if (!parent.isValid())
-        return 0;
-
-    // FIXME: Implement me!
+void AdminWindow::onSessionsClicked() {
+    statusBar()->showMessage("Активные сессии");
 }
 
-QVariant admin_window::data(const QModelIndex &index, int role) const
-{
-    if (!index.isValid())
-        return QVariant();
+void AdminWindow::onLogsClicked() {
+    statusBar()->showMessage("Журнал аудита");
+}
 
-    // FIXME: Implement me!
-    return QVariant();
+AdminWindow::~AdminWindow()
+{
+    delete ui;
 }

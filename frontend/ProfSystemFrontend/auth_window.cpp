@@ -1,6 +1,7 @@
 #include "auth_window.h"
-#include "./ui_auth_window.h"
+#include "ui_auth_window.h"
 #include "change_adminpass_window.h"
+#include "admin_window.h"
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QPushButton>
@@ -218,7 +219,9 @@ void AuthWindow::showPasswordChangeDialog()
 
 void AuthWindow::openAdminWindow()
 {
-    qDebug() << "Открываю админку";
+    AdminWindow *adminWindow = new AdminWindow();
+    adminWindow->show();
+
     this->close();
 }
 

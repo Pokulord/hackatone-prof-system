@@ -25,6 +25,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         change_adminpass_window.h change_adminpass_window.cpp
         change_adminpass_window.ui
+        admin_window.h admin_window.cpp
+        admin_window.h admin_window.cpp admin_window.ui
+        usersInfo_window.h usersInfo_window.cpp
+        usersInfo_window.ui
 
 
 

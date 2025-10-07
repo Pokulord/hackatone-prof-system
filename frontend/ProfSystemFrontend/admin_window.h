@@ -1,30 +1,32 @@
 #ifndef ADMIN_WINDOW_H
 #define ADMIN_WINDOW_H
 
-#include <QAbstractItemModel>
+#include <QGridLayout>
+#include <QMainWindow>
 
-class admin_window : public QAbstractItemModel
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class AdminWindow;
+}
+QT_END_NAMESPACE
+
+class AdminWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit admin_window(QObject *parent = nullptr);
+    explicit AdminWindow(QWidget *parent = nullptr);
+    ~AdminWindow();
 
-    // Header:
-    QVariant headerData(int section,
-                        Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const override;
-
-    // Basic functionality:
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex &index) const override;
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+private slots:
+    void onStatisticsClicked();
+    void onUsersClicked();
+    void onSessionsClicked();
+    void onLogsClicked();
+    void centerContent();
 
 private:
+    Ui::AdminWindow *ui;
 };
 
 #endif // ADMIN_WINDOW_H

@@ -1,5 +1,5 @@
 #include "change_adminpass_window.h"
-#include "./ui_change_adminpass_window.h"
+#include "ui_change_adminpass_window.h"
 #include <QMessageBox>
 #include <QPushButton>
 #include <QVBoxLayout>
