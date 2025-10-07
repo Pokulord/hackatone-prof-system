@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/AuthServer.dir/src/main.cpp.o CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o -o AuthServer  /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lpqxx 

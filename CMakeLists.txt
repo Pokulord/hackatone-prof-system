@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(AuthServer)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -21,19 +21,17 @@ add_executable(AuthServer
 )
 
 find_package(OpenSSL REQUIRED)
-if(OpenSSL_FOUND)
-    include_directories(${OPENSSL_INCLUDE_DIR})
-    target_link_libraries(AuthServer OpenSSL::SSL OpenSSL::Crypto)
-endif()
+find_path(PQXX_INCLUDE_DIR NAMES pqxx/pqxx PATHS "C:/Users/Merrow/vcpkg/installed/x64-windows/include" NO_DEFAULT_PATH)
+find_library(PQXX_LIBRARY NAMES pqxx)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(LIBPQXX REQUIRED libpqxx)
-
-include_directories(${LIBPQXX_INCLUDE_DIRS})
-link_directories(${LIBPQXX_LIBRARY_DIRS})
-
-target_link_libraries(AuthServer ${LIBPQXX_LIBRARIES})
+target_include_directories(AuthServer PRIVATE ${PQXX_INCLUDE_DIR})
 
 find_package(Threads REQUIRED)
-target_link_libraries(AuthServer Threads::Threads)
+target_link_libraries(AuthServer PRIVATE
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    ${PQXX_LIBRARY}
+    Threads::Threads
+)
+
 

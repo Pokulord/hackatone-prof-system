@@ -24,6 +24,7 @@ public:
     explicit UserService(std::shared_ptr<IUserRepository> repo);
 
     std::optional<User> authenticate(const std::string& username, const std::string& password);
+    std::optional<User> getUserByUsername(const std::string& username);
     bool createUser(const std::string& username, const std::string& password, Role role, bool mustChangePassword);
     bool changePassword(const std::string& username, const std::string& newPassword);
     bool userExists(const std::string& username);

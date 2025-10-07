@@ -1,6 +1,7 @@
 #include "crow_all.h"
 #include "UseCases/UserService.h"
 #include "InterfaceAdapters/PgUserRepository.h"
+#include "loadenv.cpp"
 #include <memory>
 #include <iostream>
 #include <optional>
@@ -35,7 +36,27 @@ bool isUsersTableEmpty(const std::string& connStr) {
 
 
 int main() {
-    std::string connStr = "dbname=hackathon user=pc_shop_admin password=123 hostaddr=127.0.0.1 port=5432";
+    setlocale(LC_ALL, "ru_RU.utf8");
+    int n = envloader::load_file(".env");
+    if (n < 0) {
+        std::cerr << "Failed to open .env\n";
+        return 1;
+    }
+
+    std::string dbname = std::getenv("DB_NAME");
+    std::string dbuser = std::getenv("DB_USER");
+    std::string dbpass = std::getenv("DB_PASSWORD");
+    std::string dbhost = std::getenv("DB_HOST");
+    std::string dbport = std::getenv("DB_PORT");
+    if (dbname.empty() || dbuser.empty() || dbpass.empty() || dbhost.empty() || dbport.empty()) {
+        std::cerr << "Database configuration missing in .env\n";
+        return 1;
+    }
+
+    std::string connStr = "dbname=" + dbname + " user=" + dbuser + " password=" + dbpass +
+                          " hostaddr=" + dbhost + " port=" + dbport;
+
+    // std::string connStr = "dbname=hackathon user=pc_shop_admin password=123 hostaddr=127.0.0.1 port=5432";
     auto userRepo = std::make_shared<PgUserRepository>(connStr);
     UserService userService(userRepo);
 
@@ -52,7 +73,7 @@ int main() {
 
 
     // register
-    CROW_ROUTE(app, "/register").methods(crow::HTTPMethod::POST)([&userService](const crow::request& req) {
+    CROW_ROUTE(app, "/register").methods(crow::HTTPMethod::Post)([&userService](const crow::request& req) {
         auto body = crow::json::load(req.body);
         if (!body || !body.has("username") || !body.has("password"))
             return crow::response(400, "Invalid JSON or missing fields");
@@ -65,7 +86,7 @@ int main() {
     });
 
     // login
-    CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::POST)([&userService](const crow::request& req) {
+    CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::Post)([&userService](const crow::request& req) {
         auto body = crow::json::load(req.body);
         if (!body || !body.has("username") || !body.has("password"))
             return crow::response(400, "Invalid JSON or missing fields");
@@ -85,7 +106,7 @@ int main() {
     });
 
     // Endpoint: изменить пароль (реализован)
-    CROW_ROUTE(app, "/change_password").methods(crow::HTTPMethod::POST)([&userService](const crow::request& req) {
+    CROW_ROUTE(app, "/change_password").methods(crow::HTTPMethod::Post)([&userService](const crow::request& req) {
         auto body = crow::json::load(req.body);
         if (!body) return crow::response(400, "Invalid JSON");
         std::string username = body["username"].s();
@@ -95,36 +116,36 @@ int main() {
     });
 
     // Endpoint: выход (logout) - заглушка
-    CROW_ROUTE(app, "/logout").methods(crow::HTTPMethod::POST)([](const crow::request&){
+    CROW_ROUTE(app, "/logout").methods(crow::HTTPMethod::Post)([](const crow::request&){
         return crow::response(200, "Logged out");
     });
 
     // Endpoint: обновление токена (refresh) - заглушка
-    CROW_ROUTE(app, "/refresh").methods(crow::HTTPMethod::POST)([](const crow::request&){
+    CROW_ROUTE(app, "/refresh").methods(crow::HTTPMethod::Post)([](const crow::request&){
         return crow::response(200, "Token refreshed");
     });
 
     // Endpoint: проверка токена - заглушка
-    CROW_ROUTE(app, "/validate").methods(crow::HTTPMethod::GET)([](const crow::request&){
+    CROW_ROUTE(app, "/validate").methods(crow::HTTPMethod::Get)([](const crow::request&){
         return crow::response(200, "Token valid");
     });
 
     // Endpoint: отзыв токена (revoke) - заглушка
-    CROW_ROUTE(app, "/revoke").methods(crow::HTTPMethod::POST)([](const crow::request&){
+    CROW_ROUTE(app, "/revoke").methods(crow::HTTPMethod::Post)([](const crow::request&){
         return crow::response(200, "Token revoked");
     });
 
     // Endpoint: получить информацию о пользователе по имени
-    CROW_ROUTE(app, "/user/<string>").methods(crow::HTTPMethod::GET)([&userService](const crow::request& req, std::string username){
+    CROW_ROUTE(app, "/user/<string>")([&userService](const crow::request& req, std::string username){
         auto userIdOpt = getUserId(req);
         if (!userIdOpt) return crow::response(401, "Unauthorized");
 
-        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? userService.authenticate(userIdOpt.value(), "") : std::nullopt;
+        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? std::optional<User>(userService.getUserByUsername(userIdOpt.value())) : std::nullopt;
         if (!currentUserOpt) return crow::response(401, "Unauthorized");
         // Можно смотреть свою информацию и администраторы
         if (*userIdOpt != username && !isAdmin(*currentUserOpt)) return crow::response(403, "Forbidden");
 
-        auto userOpt = userService.userExists(username) ? userService.authenticate(username, "") : std::nullopt;
+        auto userOpt = userService.userExists(username) ? std::optional<User>(userService.getUserByUsername(username)) : std::nullopt;
         if (!userOpt) return crow::response(404, "User not found");
 
         crow::json::wvalue res;
@@ -135,11 +156,11 @@ int main() {
     });
 
     // Endpoint: получить список пользователей (только администратор)
-    CROW_ROUTE(app, "/users").methods(crow::HTTPMethod::GET)([&userService](const crow::request& req) {
+    CROW_ROUTE(app, "/users").methods(crow::HTTPMethod::Get)([&userService](const crow::request& req) {
         auto userIdOpt = getUserId(req);
         if (!userIdOpt) return crow::response(401, "Unauthorized");
 
-        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? userService.authenticate(userIdOpt.value(), "") : std::nullopt;
+        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? std::optional<User>(userService.getUserByUsername(userIdOpt.value())) : std::nullopt;
         if (!currentUserOpt || !isAdmin(*currentUserOpt)) return crow::response(403, "Forbidden");
 
         // В реальном приложении получаем из репозитория полный список
@@ -150,11 +171,11 @@ int main() {
     });
 
     // Endpoint: удалить пользователя (себя или админу)
-    CROW_ROUTE(app, "/user/<string>").methods(crow::HTTPMethod::DELETE)([&userService](const crow::request& req, std::string username){
+    CROW_ROUTE(app, "/user/<string>").methods(crow::HTTPMethod::Delete)([&userService](const crow::request& req, std::string username){
         auto userIdOpt = getUserId(req);
         if (!userIdOpt) return crow::response(401, "Unauthorized");
 
-        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? userService.authenticate(userIdOpt.value(), "") : std::nullopt;
+        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? std::optional<User>(userService.getUserByUsername(userIdOpt.value())) : std::nullopt;
         if (!currentUserOpt) return crow::response(401, "Unauthorized");
 
         if (*userIdOpt != username && !isAdmin(*currentUserOpt)) return crow::response(403, "Forbidden");
@@ -164,11 +185,11 @@ int main() {
     });
 
     // Endpoint: изменить роли пользователя - заглушка
-    CROW_ROUTE(app, "/user/<string>/roles").methods(crow::HTTPMethod::PATCH)([&userService](const crow::request& req, std::string username){
+    CROW_ROUTE(app, "/user/<string>/roles").methods(crow::HTTPMethod::Patch)([&userService](const crow::request& req, std::string username){
         auto userIdOpt = getUserId(req);
         if (!userIdOpt) return crow::response(401, "Unauthorized");
 
-        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? userService.authenticate(userIdOpt.value(), "") : std::nullopt;
+        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? std::optional<User>(userService.getUserByUsername(userIdOpt.value())) : std::nullopt;
         if (!currentUserOpt || !isAdmin(*currentUserOpt)) return crow::response(403, "Forbidden");
 
         auto body = crow::json::load(req.body);
@@ -179,12 +200,12 @@ int main() {
     });
 
     // Endpoint: health check
-    CROW_ROUTE(app, "/health").methods(crow::HTTPMethod::GET)([](const crow::request&){
+    CROW_ROUTE(app, "/health").methods(crow::HTTPMethod::Get)([](const crow::request&){
         return crow::response(200, "OK");
     });
 
     // Endpoint: версия API
-    CROW_ROUTE(app, "/version").methods(crow::HTTPMethod::GET)([](const crow::request&){
+    CROW_ROUTE(app, "/version").methods(crow::HTTPMethod::Get)([](const crow::request&){
         return crow::response(200, "API Version 1.0");
     });
 

@@ -35,6 +35,10 @@ std::optional<User> UserService::authenticate(const std::string& username, const
     return userOpt;
 }
 
+std::optional<User> UserService::getUserByUsername(const std::string& username) {
+    return userRepository->getUserByUsername(username);
+}
+
 bool UserService::createUser(const std::string& username, const std::string& password, Role role, bool mustChangePassword) {
     if (userRepository->getUserByUsername(username)) return false;
     std::string hashed = User::hashPassword(password);
