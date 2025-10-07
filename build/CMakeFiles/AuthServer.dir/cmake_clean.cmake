@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o.d"
   "CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o"
   "CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o.d"
+  "CMakeFiles/AuthServer.dir/src/jwt_utils.cpp.o"
+  "CMakeFiles/AuthServer.dir/src/jwt_utils.cpp.o.d"
   "CMakeFiles/AuthServer.dir/src/main.cpp.o"
   "CMakeFiles/AuthServer.dir/src/main.cpp.o.d"
 )

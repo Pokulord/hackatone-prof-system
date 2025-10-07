@@ -239,6 +239,9 @@ PKG_CONFIG_ARGN:STRING=
 //pkg-config executable
 PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
 
+//The directory containing a CMake configuration file for jwt-cpp.
+jwt-cpp_DIR:PATH=jwt-cpp_DIR-NOTFOUND
+
 //Path to a library.
 pkgcfg_lib_LIBPQXX_pqxx:FILEPATH=/usr/lib/x86_64-linux-gnu/libpqxx.so
 

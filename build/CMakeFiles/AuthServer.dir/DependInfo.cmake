@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/svyat/Desktop/hackatone-prof-system/src/Entities/User.cpp" "CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o.d"
   "/home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/PgUserRepository.cpp" "CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o.d"
   "/home/svyat/Desktop/hackatone-prof-system/src/UseCases/UserService.cpp" "CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o.d"
+  "/home/svyat/Desktop/hackatone-prof-system/src/jwt_utils.cpp" "CMakeFiles/AuthServer.dir/src/jwt_utils.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/jwt_utils.cpp.o.d"
   "/home/svyat/Desktop/hackatone-prof-system/src/main.cpp" "CMakeFiles/AuthServer.dir/src/main.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/main.cpp.o.d"
   )
 

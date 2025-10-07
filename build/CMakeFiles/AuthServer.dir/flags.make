@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/svyat/Desktop/hackatone-prof-system/src -I/home/svyat/Desktop/hackatone-prof-system/src/Entities -I/home/svyat/Desktop/hackatone-prof-system/src/UseCases -I/home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters -I/home/svyat/Desktop/hackatone-prof-system/src/thirdparty
+CXX_INCLUDES = -I/home/svyat/Desktop/hackatone-prof-system/src -I/home/svyat/Desktop/hackatone-prof-system/src/Entities -I/home/svyat/Desktop/hackatone-prof-system/src/UseCases -I/home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters -I/home/svyat/Desktop/hackatone-prof-system/src/thirdparty -I/home/svyat/Desktop/hackatone-prof-system/jwt-cpp/include
 
 CXX_FLAGS = -std=gnu++17 -fPIE
 

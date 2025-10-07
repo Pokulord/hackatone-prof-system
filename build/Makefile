@@ -201,6 +201,30 @@ src/UseCases/UserService.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/AuthServer.dir/build.make CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.s
 .PHONY : src/UseCases/UserService.cpp.s
 
+src/jwt_utils.o: src/jwt_utils.cpp.o
+.PHONY : src/jwt_utils.o
+
+# target to build an object file
+src/jwt_utils.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AuthServer.dir/build.make CMakeFiles/AuthServer.dir/src/jwt_utils.cpp.o
+.PHONY : src/jwt_utils.cpp.o
+
+src/jwt_utils.i: src/jwt_utils.cpp.i
+.PHONY : src/jwt_utils.i
+
+# target to preprocess a source file
+src/jwt_utils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AuthServer.dir/build.make CMakeFiles/AuthServer.dir/src/jwt_utils.cpp.i
+.PHONY : src/jwt_utils.cpp.i
+
+src/jwt_utils.s: src/jwt_utils.cpp.s
+.PHONY : src/jwt_utils.s
+
+# target to generate assembly for a file
+src/jwt_utils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AuthServer.dir/build.make CMakeFiles/AuthServer.dir/src/jwt_utils.cpp.s
+.PHONY : src/jwt_utils.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -243,6 +267,9 @@ help:
 	@echo "... src/UseCases/UserService.o"
 	@echo "... src/UseCases/UserService.i"
 	@echo "... src/UseCases/UserService.s"
+	@echo "... src/jwt_utils.o"
+	@echo "... src/jwt_utils.i"
+	@echo "... src/jwt_utils.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

@@ -5,10 +5,27 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include "jwt_utils.h"
 
 // Проверка прав администратора
 bool isAdmin(const User& user) {
     return user.getRole() == Role::ADMIN;
+}
+
+
+bool saveTokenToFile(const std::string& token, const std::string& filepath) {
+    std::ofstream ofs(filepath, std::ios::out | std::ios::trunc);
+    if (!ofs.is_open()) {
+        std::cerr << "Failed to open token file for writing: " << filepath << std::endl;
+        return false;
+    }
+    ofs << token;
+    ofs.close();
+    if (chmod(filepath.c_str(), S_IRUSR | S_IWUSR) != 0) {
+        std::cerr << "Failed to set file permissions on token file" << std::endl;
+        return false;
+    }
+    return true;
 }
 
 // Извлечение username из заголовка запроса для аутентификации (упрощенно)
@@ -35,6 +52,7 @@ bool isUsersTableEmpty(const std::string& connStr) {
 
 
 int main() {
+    JwtUtils jwtUtils("supersecretkey");
     std::string connStr = "dbname=hackathon user=pc_shop_admin password=123 hostaddr=127.0.0.1 port=5432";
     auto userRepo = std::make_shared<PgUserRepository>(connStr);
     UserService userService(userRepo);
@@ -65,7 +83,7 @@ int main() {
     });
 
     // login
-    CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::POST)([&userService](const crow::request& req) {
+    CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::POST)([&userService, &jwtUtils](const crow::request& req) {
         auto body = crow::json::load(req.body);
         if (!body || !body.has("username") || !body.has("password"))
             return crow::response(400, "Invalid JSON or missing fields");
@@ -74,12 +92,24 @@ int main() {
         std::string password = body["password"].s();
 
         auto userOpt = userService.authenticate(username, password);
-        if (!userOpt)
-            return crow::response(401, "Auth failed");
+        if (!userOpt) return crow::response(401, "Auth failed");
+
+        std::string role = (userOpt->getRole() == Role::ADMIN) ? "admin" : "user";
+        std::string token = jwtUtils.generateToken(username, role);
+
+        // Сохраняем токен в файл
+        const char* userEnv = getenv("USER");
+        std::string usrstr = userEnv; 
+        std::string tokenFilePath = "/home/" + usrstr + "/.myapp_token";
+        if (!saveTokenToFile(token, tokenFilePath)) {
+            std::cerr << "Warning: could not save JWT token to file" << std::endl;
+        }
+
 
         crow::json::wvalue res;
-        res["username"] = userOpt->getUsername();
-        res["role"] = (userOpt->getRole() == Role::ADMIN) ? "admin" : "user";
+        res["access_token"] = token;
+        res["username"] = username;
+        res["role"] = role;
         res["mustChangePassword"] = userOpt->getMustChangePassword();
         return crow::response(res);
     });
