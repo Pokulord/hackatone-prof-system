@@ -5,6 +5,7 @@
 #include <QHeaderView>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QVBoxLayout>
 
 UsersInfoWindow::UsersInfoWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,7 +18,13 @@ UsersInfoWindow::UsersInfoWindow(QWidget *parent)
 
     setupToolbar();
     setupTable();
-    loadUsers(); // Загрузка тестовых данных
+    loadUsers();
+
+    QWidget *centralWidget = new QWidget(this);
+    QVBoxLayout *layout = new QVBoxLayout(centralWidget);
+    layout->addWidget(ui->usersTable);
+    layout->setContentsMargins(10, 10, 10, 10); // Небольшие отступы
+    setCentralWidget(centralWidget);
 }
 
 void UsersInfoWindow::setupToolbar()
@@ -39,11 +46,9 @@ void UsersInfoWindow::setupTable()
 {
     QTableWidget *table = ui->usersTable;
 
-    // Настройка колонок
     table->setColumnCount(4);
     table->setHorizontalHeaderLabels({"Логин", "Роль", "Дата создания", "Статус"});
 
-    // Настройка внешнего вида
     table->setStyleSheet(
         "QTableWidget {"
         "   background: white;"
@@ -81,7 +86,6 @@ void UsersInfoWindow::loadUsers()
         for (int j = 0; j < fields.size(); ++j) {
             QTableWidgetItem *item = new QTableWidgetItem(fields[j]);
 
-            // Цвет для статуса
             if (j == 3) {
                 item->setForeground(fields[j] == "Активен" ? Qt::darkGreen : Qt::red);
             }

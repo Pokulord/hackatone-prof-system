@@ -1,5 +1,6 @@
 #include "admin_window.h"
 #include "ui_admin_window.h"
+#include "usersInfo_window.h"
 #include <QStatusBar>
 
 AdminWindow::AdminWindow(QWidget *parent)
@@ -24,7 +25,6 @@ void AdminWindow::centerContent()
     QGridLayout *grid = ui->gridLayout;
     grid->setAlignment(Qt::AlignCenter);
 
-    // ИЛИ через центральный виджет
     ui->centralwidget->setLayout(new QVBoxLayout());
     ui->centralwidget->layout()->setAlignment(Qt::AlignCenter);
     ui->centralwidget->layout()->addWidget(ui->centralwidget_2);
@@ -35,7 +35,9 @@ void AdminWindow::onStatisticsClicked() {
 }
 
 void AdminWindow::onUsersClicked() {
-    statusBar()->showMessage("Управление пользователями");
+    UsersInfoWindow *usersInfoWindow = new UsersInfoWindow();
+    usersInfoWindow->show();
+    this->hide();
 }
 
 void AdminWindow::onSessionsClicked() {
