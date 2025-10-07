@@ -23,6 +23,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ProfSystemFrontend
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        change_adminpass_window.h change_adminpass_window.cpp
+        change_adminpass_window.ui
+
+
+
+
 
     )
 # Define target properties for Android with Qt 6 as:
