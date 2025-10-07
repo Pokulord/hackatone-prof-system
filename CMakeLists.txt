@@ -5,9 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-# --- VCPKG DEPENDENCIES ---
-# Use vcpkg to find and manage packages
-# find_package(nlohmann_json REQUIRED)
+# --- DEPENDENCIES ---
+find_package(nlohmann_json REQUIRED)
+find_package(Boost REQUIRED COMPONENTS unit_test_framework)
+
 # find_package(Crow REQUIRED)
 # find_package(libpqxx REQUIRED)
 # find_package(OpenSSL REQUIRED)
@@ -21,7 +22,6 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 file(GLOB_RECURSE DOMAIN_FILES
     "src/domain/entities/*.cpp"
     "src/domain/services/*.cpp"
-    "src/domain/exceptions/*.cpp"
 )
 
 # Application Layer
@@ -65,7 +65,7 @@ target_include_directories(AuthServer PUBLIC
 # --- LINK LIBRARIES ---
 # Link the executable with the libraries found by vcpkg
 target_link_libraries(AuthServer PRIVATE
-    # nlohmann_json::nlohmann_json
+    nlohmann_json::nlohmann_json
     # Crow::crow
     # libpqxx::pqxx
     # OpenSSL::SSL
@@ -73,3 +73,25 @@ target_link_libraries(AuthServer PRIVATE
     # bcrypt::bcrypt
     # cpp-uuid::uuid
 )
+
+# --- TESTING ---
+# enable_testing()
+
+# add_executable(AuthServerTests
+#     # src/tests/AuthenticateUserUseCase.test.cpp
+#     ${DOMAIN_FILES}
+#     ${APPLICATION_FILES}
+#     ${INFRASTRUCTURE_FILES}
+# )
+
+# target_include_directories(AuthServerTests PUBLIC
+#     "${PROJECT_SOURCE_DIR}/src"
+#     ${Boost_INCLUDE_DIRS}
+# )
+
+# target_link_libraries(AuthServerTests PRIVATE
+#     nlohmann_json::nlohmann_json
+#     Boost::unit_test_framework
+# )
+
+# add_test(NAME AuthServerTests COMMAND AuthServerTests)

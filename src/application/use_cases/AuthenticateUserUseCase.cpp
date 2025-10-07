@@ -8,11 +8,13 @@ namespace application::use_cases {
         std::shared_ptr<domain::repositories::IUserRepository> userRepository,
         std::shared_ptr<domain::repositories::IAuditRepository> auditRepository,
         std::shared_ptr<domain::services::IPasswordHasher> passwordHasher,
-        std::shared_ptr<domain::services::ITokenGenerator> tokenGenerator)
+        std::shared_ptr<domain::services::ITokenGenerator> tokenGenerator,
+        std::shared_ptr<domain::interfaces::IAuthConfigProvider> authConfig)
         : userRepository_(std::move(userRepository)),
           auditRepository_(std::move(auditRepository)),
           passwordHasher_(std::move(passwordHasher)),
-          tokenGenerator_(std::move(tokenGenerator)) {
+          tokenGenerator_(std::move(tokenGenerator)),
+          authConfig_(std::move(authConfig)) {
               if (!userRepository_ || !auditRepository_ || !passwordHasher_ || !tokenGenerator_) {
                   throw std::invalid_argument("All dependencies must be provided.");
               }
@@ -36,12 +38,8 @@ namespace application::use_cases {
         }
 
         if (!passwordHasher_->verifyPassword(request.password, user.getPasswordHash())) {
-            // NOTE: This is a simplified implementation. 
-            // In a real scenario, you'd fetch these values from config.
-            const int MAX_ATTEMPTS = 5;
-            const std::chrono::minutes LOCKOUT_DURATION(15);
-            
-            user.recordFailedLoginAttempt(MAX_ATTEMPTS, LOCKOUT_DURATION);
+                        
+            user.recordFailedLoginAttempt(authConfig_->getMaxAttempts(), authConfig_->getLockoutDuration());
             userRepository_->save(user);
             
             auto log = domain::entities::AuditLog::create(request.username, "LOGIN_ATTEMPT", false, "Invalid password");

@@ -1,0 +1,4 @@
+{
+    "max_attempts": 5,
+    "lockout_duration_minutes": 15
+}

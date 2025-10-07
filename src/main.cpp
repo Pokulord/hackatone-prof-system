@@ -1,10 +1,14 @@
 #include <iostream>
 #include <memory>
+
+
+
 #include "application/use_cases/AuthenticateUserUseCase.hpp"
 #include "infrastructure/data/InMemoryUserRepository.hpp"
 #include "infrastructure/data/InMemoryAuditRepository.hpp"
 #include "infrastructure/adapters/PlaintextPasswordHasher.hpp"
 #include "infrastructure/adapters/SimpleTokenGenerator.hpp"
+#include "infrastructure/config/AuthConfig.hpp"
 
 void demonstrateAuthentication() {
     // --- Dependency Injection ---
@@ -12,12 +16,14 @@ void demonstrateAuthentication() {
     auto auditRepository = std::make_shared<infrastructure::data::InMemoryAuditRepository>();
     auto passwordHasher = std::make_shared<infrastructure::adapters::PlaintextPasswordHasher>();
     auto tokenGenerator = std::make_shared<infrastructure::adapters::SimpleTokenGenerator>();
+    auto authConfig = std::make_shared<infrastructure::config::JsonAuthConfigProvider>("config/auth_server.json");
 
     auto authService = std::make_shared<application::use_cases::AuthenticateUserUseCase>(
         userRepository,
         auditRepository,
         passwordHasher,
-        tokenGenerator
+        tokenGenerator,
+        authConfig
     );
 
     // --- Use Case Execution ---
