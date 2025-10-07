@@ -1,9 +1,9 @@
 CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o: \
- /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/PgUserRepository.cpp \
+ /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/PgUserRepository.cpp \
  /usr/include/stdc-predef.h \
- /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/PgUserRepository.h \
- /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/IUserRepository.h \
- /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/../Entities/User.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/PgUserRepository.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/IUserRepository.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/../Entities/User.h \
  /usr/include/c++/13/string /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \

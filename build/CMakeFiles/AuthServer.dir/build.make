@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/svyat/Desktop/hackaton_ebanton
+CMAKE_SOURCE_DIR = /home/svyat/Desktop/hackatone-prof-system
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/svyat/Desktop/hackaton_ebanton/build
+CMAKE_BINARY_DIR = /home/svyat/Desktop/hackatone-prof-system/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/AuthServer.dir/depend.make
@@ -70,60 +70,60 @@ include CMakeFiles/AuthServer.dir/progress.make
 include CMakeFiles/AuthServer.dir/flags.make
 
 CMakeFiles/AuthServer.dir/src/main.cpp.o: CMakeFiles/AuthServer.dir/flags.make
-CMakeFiles/AuthServer.dir/src/main.cpp.o: /home/svyat/Desktop/hackaton_ebanton/src/main.cpp
+CMakeFiles/AuthServer.dir/src/main.cpp.o: /home/svyat/Desktop/hackatone-prof-system/src/main.cpp
 CMakeFiles/AuthServer.dir/src/main.cpp.o: CMakeFiles/AuthServer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/svyat/Desktop/hackaton_ebanton/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/AuthServer.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AuthServer.dir/src/main.cpp.o -MF CMakeFiles/AuthServer.dir/src/main.cpp.o.d -o CMakeFiles/AuthServer.dir/src/main.cpp.o -c /home/svyat/Desktop/hackaton_ebanton/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/svyat/Desktop/hackatone-prof-system/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/AuthServer.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AuthServer.dir/src/main.cpp.o -MF CMakeFiles/AuthServer.dir/src/main.cpp.o.d -o CMakeFiles/AuthServer.dir/src/main.cpp.o -c /home/svyat/Desktop/hackatone-prof-system/src/main.cpp
 
 CMakeFiles/AuthServer.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AuthServer.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/svyat/Desktop/hackaton_ebanton/src/main.cpp > CMakeFiles/AuthServer.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/svyat/Desktop/hackatone-prof-system/src/main.cpp > CMakeFiles/AuthServer.dir/src/main.cpp.i
 
 CMakeFiles/AuthServer.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AuthServer.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/svyat/Desktop/hackaton_ebanton/src/main.cpp -o CMakeFiles/AuthServer.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/svyat/Desktop/hackatone-prof-system/src/main.cpp -o CMakeFiles/AuthServer.dir/src/main.cpp.s
 
 CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o: CMakeFiles/AuthServer.dir/flags.make
-CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o: /home/svyat/Desktop/hackaton_ebanton/src/Entities/User.cpp
+CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o: /home/svyat/Desktop/hackatone-prof-system/src/Entities/User.cpp
 CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o: CMakeFiles/AuthServer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/svyat/Desktop/hackaton_ebanton/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o -MF CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o.d -o CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o -c /home/svyat/Desktop/hackaton_ebanton/src/Entities/User.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/svyat/Desktop/hackatone-prof-system/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o -MF CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o.d -o CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o -c /home/svyat/Desktop/hackatone-prof-system/src/Entities/User.cpp
 
 CMakeFiles/AuthServer.dir/src/Entities/User.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AuthServer.dir/src/Entities/User.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/svyat/Desktop/hackaton_ebanton/src/Entities/User.cpp > CMakeFiles/AuthServer.dir/src/Entities/User.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/svyat/Desktop/hackatone-prof-system/src/Entities/User.cpp > CMakeFiles/AuthServer.dir/src/Entities/User.cpp.i
 
 CMakeFiles/AuthServer.dir/src/Entities/User.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AuthServer.dir/src/Entities/User.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/svyat/Desktop/hackaton_ebanton/src/Entities/User.cpp -o CMakeFiles/AuthServer.dir/src/Entities/User.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/svyat/Desktop/hackatone-prof-system/src/Entities/User.cpp -o CMakeFiles/AuthServer.dir/src/Entities/User.cpp.s
 
 CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o: CMakeFiles/AuthServer.dir/flags.make
-CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o: /home/svyat/Desktop/hackaton_ebanton/src/UseCases/UserService.cpp
+CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o: /home/svyat/Desktop/hackatone-prof-system/src/UseCases/UserService.cpp
 CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o: CMakeFiles/AuthServer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/svyat/Desktop/hackaton_ebanton/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o -MF CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o.d -o CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o -c /home/svyat/Desktop/hackaton_ebanton/src/UseCases/UserService.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/svyat/Desktop/hackatone-prof-system/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o -MF CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o.d -o CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o -c /home/svyat/Desktop/hackatone-prof-system/src/UseCases/UserService.cpp
 
 CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/svyat/Desktop/hackaton_ebanton/src/UseCases/UserService.cpp > CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/svyat/Desktop/hackatone-prof-system/src/UseCases/UserService.cpp > CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.i
 
 CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/svyat/Desktop/hackaton_ebanton/src/UseCases/UserService.cpp -o CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/svyat/Desktop/hackatone-prof-system/src/UseCases/UserService.cpp -o CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.s
 
 CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o: CMakeFiles/AuthServer.dir/flags.make
-CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o: /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/PgUserRepository.cpp
+CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o: /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/PgUserRepository.cpp
 CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o: CMakeFiles/AuthServer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/svyat/Desktop/hackaton_ebanton/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o -MF CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o.d -o CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o -c /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/PgUserRepository.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/svyat/Desktop/hackatone-prof-system/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o -MF CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o.d -o CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o -c /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/PgUserRepository.cpp
 
 CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/PgUserRepository.cpp > CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/PgUserRepository.cpp > CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.i
 
 CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/PgUserRepository.cpp -o CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/PgUserRepository.cpp -o CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.s
 
 # Object files for target AuthServer
 AuthServer_OBJECTS = \
@@ -143,7 +143,7 @@ AuthServer: CMakeFiles/AuthServer.dir/build.make
 AuthServer: /usr/lib/x86_64-linux-gnu/libssl.so
 AuthServer: /usr/lib/x86_64-linux-gnu/libcrypto.so
 AuthServer: CMakeFiles/AuthServer.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/svyat/Desktop/hackaton_ebanton/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable AuthServer"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/svyat/Desktop/hackatone-prof-system/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable AuthServer"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/AuthServer.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -155,6 +155,6 @@ CMakeFiles/AuthServer.dir/clean:
 .PHONY : CMakeFiles/AuthServer.dir/clean
 
 CMakeFiles/AuthServer.dir/depend:
-	cd /home/svyat/Desktop/hackaton_ebanton/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/svyat/Desktop/hackaton_ebanton /home/svyat/Desktop/hackaton_ebanton /home/svyat/Desktop/hackaton_ebanton/build /home/svyat/Desktop/hackaton_ebanton/build /home/svyat/Desktop/hackaton_ebanton/build/CMakeFiles/AuthServer.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/svyat/Desktop/hackatone-prof-system/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/svyat/Desktop/hackatone-prof-system /home/svyat/Desktop/hackatone-prof-system /home/svyat/Desktop/hackatone-prof-system/build /home/svyat/Desktop/hackatone-prof-system/build /home/svyat/Desktop/hackatone-prof-system/build/CMakeFiles/AuthServer.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/AuthServer.dir/depend
 

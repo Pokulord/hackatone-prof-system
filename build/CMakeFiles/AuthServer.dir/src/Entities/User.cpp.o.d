@@ -1,7 +1,7 @@
 CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o: \
- /home/svyat/Desktop/hackaton_ebanton/src/Entities/User.cpp \
+ /home/svyat/Desktop/hackatone-prof-system/src/Entities/User.cpp \
  /usr/include/stdc-predef.h \
- /home/svyat/Desktop/hackaton_ebanton/src/Entities/User.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/Entities/User.h \
  /usr/include/c++/13/string /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \

@@ -8,10 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/svyat/Desktop/hackaton_ebanton/src/Entities/User.cpp" "CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o.d"
-  "/home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/PgUserRepository.cpp" "CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o.d"
-  "/home/svyat/Desktop/hackaton_ebanton/src/UseCases/UserService.cpp" "CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o.d"
-  "/home/svyat/Desktop/hackaton_ebanton/src/main.cpp" "CMakeFiles/AuthServer.dir/src/main.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/main.cpp.o.d"
+  "/home/svyat/Desktop/hackatone-prof-system/src/Entities/User.cpp" "CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/Entities/User.cpp.o.d"
+  "/home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/PgUserRepository.cpp" "CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/InterfaceAdapters/PgUserRepository.cpp.o.d"
+  "/home/svyat/Desktop/hackatone-prof-system/src/UseCases/UserService.cpp" "CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o.d"
+  "/home/svyat/Desktop/hackatone-prof-system/src/main.cpp" "CMakeFiles/AuthServer.dir/src/main.cpp.o" "gcc" "CMakeFiles/AuthServer.dir/src/main.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

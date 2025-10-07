@@ -1,8 +1,8 @@
 CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o: \
- /home/svyat/Desktop/hackaton_ebanton/src/UseCases/UserService.cpp \
+ /home/svyat/Desktop/hackatone-prof-system/src/UseCases/UserService.cpp \
  /usr/include/stdc-predef.h \
- /home/svyat/Desktop/hackaton_ebanton/src/UseCases/UserService.h \
- /home/svyat/Desktop/hackaton_ebanton/src/UseCases/../Entities/User.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/UseCases/UserService.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/UseCases/../Entities/User.h \
  /usr/include/c++/13/string /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -168,4 +168,4 @@ CMakeFiles/AuthServer.dir/src/UseCases/UserService.cpp.o: \
  /usr/include/x86_64-linux-gnu/c++/13/bits/error_constants.h \
  /usr/include/c++/13/bits/std_mutex.h \
  /usr/include/c++/13/bits/unique_lock.h \
- /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/IUserRepository.h
+ /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/IUserRepository.h

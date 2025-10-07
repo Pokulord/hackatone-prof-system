@@ -1,7 +1,7 @@
 CMakeFiles/AuthServer.dir/src/main.cpp.o: \
- /home/svyat/Desktop/hackaton_ebanton/src/main.cpp \
+ /home/svyat/Desktop/hackatone-prof-system/src/main.cpp \
  /usr/include/stdc-predef.h \
- /home/svyat/Desktop/hackaton_ebanton/src/crow_all.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/crow_all.h \
  /usr/include/c++/13/unordered_map \
  /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
@@ -864,11 +864,11 @@ CMakeFiles/AuthServer.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/stl_map.h \
  /usr/include/c++/13/bits/stl_multimap.h /usr/include/c++/13/thread \
  /usr/include/c++/13/bits/this_thread_sleep.h \
- /home/svyat/Desktop/hackaton_ebanton/src/UseCases/UserService.h \
- /home/svyat/Desktop/hackaton_ebanton/src/UseCases/../Entities/User.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/UseCases/UserService.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/UseCases/../Entities/User.h \
  /usr/include/c++/13/optional \
- /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/PgUserRepository.h \
- /home/svyat/Desktop/hackaton_ebanton/src/InterfaceAdapters/IUserRepository.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/PgUserRepository.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/IUserRepository.h \
  /usr/include/pqxx/pqxx /usr/include/pqxx/internal/header-pre.hxx \
  /usr/include/pqxx/internal/cxx-features.hxx \
  /usr/include/pqxx/config-public-compiler.h /usr/include/c++/13/ciso646 \
