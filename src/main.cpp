@@ -6,12 +6,14 @@
 #include <optional>
 #include <string>
 #include "jwt_utils.h"
+#include "RefreshTokenService.h"
+#include <fstream>
+#include <sys/stat.h>
 
 // Проверка прав администратора
 bool isAdmin(const User& user) {
     return user.getRole() == Role::ADMIN;
 }
-
 
 bool saveTokenToFile(const std::string& token, const std::string& filepath) {
     std::ofstream ofs(filepath, std::ios::out | std::ios::trunc);
@@ -28,15 +30,12 @@ bool saveTokenToFile(const std::string& token, const std::string& filepath) {
     return true;
 }
 
-// Извлечение username из заголовка запроса для аутентификации (упрощенно)
 std::optional<std::string> getUserId(const crow::request& req) {
     auto uid = req.get_header_value("X-User-Id");
     if (uid.empty()) return std::nullopt;
     return uid;
 }
 
-
-// Функция проверки, пуста ли таблица users
 bool isUsersTableEmpty(const std::string& connStr) {
     try {
         pqxx::connection c(connStr);
@@ -50,14 +49,13 @@ bool isUsersTableEmpty(const std::string& connStr) {
     }
 }
 
-
 int main() {
     JwtUtils jwtUtils("supersecretkey");
     std::string connStr = "dbname=hackathon user=pc_shop_admin password=123 hostaddr=127.0.0.1 port=5432";
     auto userRepo = std::make_shared<PgUserRepository>(connStr);
     UserService userService(userRepo);
+    RefreshTokenService refreshService(*userRepo, jwtUtils);
 
-    // Проверяем пустая ли таблица users и создаём admin если нужно
     if (isUsersTableEmpty(connStr)) {
         std::cout << "Users table is empty. Creating default admin user." << std::endl;
         bool created = userService.createUser("admin", "admin123", Role::ADMIN, true);
@@ -68,8 +66,29 @@ int main() {
 
     crow::SimpleApp app;
 
+    // Лямбда для проверки и обновления токена
+    auto checkAndUpdateToken = [&jwtUtils, &userRepo](const crow::request& req) -> std::optional<std::string> {
+        auto authHeader = req.get_header_value("Authorization");
+        if (authHeader.substr(0, 7) != "Bearer ")
+            return std::nullopt;
 
-    // register
+        std::string token = authHeader.substr(7);
+        std::string username;
+
+        if (!jwtUtils.verifyToken(token, username)) {
+            if (userRepo->isTokenRevoked(token) || jwtUtils.isTokenExpired(token)) {
+                userRepo->addExpiredToken(token);
+                return std::nullopt;
+            }
+            return std::nullopt;
+        }
+
+        if (userRepo->isTokenRevoked(token)) {
+            return std::nullopt;
+        }
+        return username;
+    };
+
     CROW_ROUTE(app, "/register").methods(crow::HTTPMethod::POST)([&userService](const crow::request& req) {
         auto body = crow::json::load(req.body);
         if (!body || !body.has("username") || !body.has("password"))
@@ -82,7 +101,6 @@ int main() {
         return res ? crow::response(200, "Registered") : crow::response(409, "User exists");
     });
 
-    // login
     CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::POST)([&userService, &jwtUtils](const crow::request& req) {
         auto body = crow::json::load(req.body);
         if (!body || !body.has("username") || !body.has("password"))
@@ -97,14 +115,12 @@ int main() {
         std::string role = (userOpt->getRole() == Role::ADMIN) ? "admin" : "user";
         std::string token = jwtUtils.generateToken(username, role);
 
-        // Сохраняем токен в файл
         const char* userEnv = getenv("USER");
-        std::string usrstr = userEnv; 
+        std::string usrstr = userEnv ? userEnv : "default";
         std::string tokenFilePath = "/home/" + usrstr + "/.myapp_token";
         if (!saveTokenToFile(token, tokenFilePath)) {
             std::cerr << "Warning: could not save JWT token to file" << std::endl;
         }
-
 
         crow::json::wvalue res;
         res["access_token"] = token;
@@ -114,110 +130,21 @@ int main() {
         return crow::response(res);
     });
 
-    // Endpoint: изменить пароль (реализован)
-    CROW_ROUTE(app, "/change_password").methods(crow::HTTPMethod::POST)([&userService](const crow::request& req) {
-        auto body = crow::json::load(req.body);
-        if (!body) return crow::response(400, "Invalid JSON");
-        std::string username = body["username"].s();
-        std::string newPassword = body["newPassword"].s();
-        bool res = userService.changePassword(username, newPassword);
-        return res ? crow::response(200, "Password changed") : crow::response(404, "User not found");
+    CROW_ROUTE(app, "/refresh").methods(crow::HTTPMethod::POST)([&refreshService](const crow::request& req) {
+        auto authHeader = req.get_header_value("Authorization");
+        if (authHeader.substr(0, 7) != "Bearer ")
+            return crow::response(401, "Invalid token");
+        std::string oldToken = authHeader.substr(7);
+
+        try {
+            std::string newToken = refreshService.refreshToken(oldToken);
+            crow::json::wvalue res;
+            res["access_token"] = newToken;
+            return crow::response(res);
+        } catch (const std::exception& e) {
+            return crow::response(401, e.what());
+        }
     });
-
-    // Endpoint: выход (logout) - заглушка
-    CROW_ROUTE(app, "/logout").methods(crow::HTTPMethod::POST)([](const crow::request&){
-        return crow::response(200, "Logged out");
-    });
-
-    // Endpoint: обновление токена (refresh) - заглушка
-    CROW_ROUTE(app, "/refresh").methods(crow::HTTPMethod::POST)([](const crow::request&){
-        return crow::response(200, "Token refreshed");
-    });
-
-    // Endpoint: проверка токена - заглушка
-    CROW_ROUTE(app, "/validate").methods(crow::HTTPMethod::GET)([](const crow::request&){
-        return crow::response(200, "Token valid");
-    });
-
-    // Endpoint: отзыв токена (revoke) - заглушка
-    CROW_ROUTE(app, "/revoke").methods(crow::HTTPMethod::POST)([](const crow::request&){
-        return crow::response(200, "Token revoked");
-    });
-
-    // Endpoint: получить информацию о пользователе по имени
-    CROW_ROUTE(app, "/user/<string>").methods(crow::HTTPMethod::GET)([&userService](const crow::request& req, std::string username){
-        auto userIdOpt = getUserId(req);
-        if (!userIdOpt) return crow::response(401, "Unauthorized");
-
-        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? userService.authenticate(userIdOpt.value(), "") : std::nullopt;
-        if (!currentUserOpt) return crow::response(401, "Unauthorized");
-        // Можно смотреть свою информацию и администраторы
-        if (*userIdOpt != username && !isAdmin(*currentUserOpt)) return crow::response(403, "Forbidden");
-
-        auto userOpt = userService.userExists(username) ? userService.authenticate(username, "") : std::nullopt;
-        if (!userOpt) return crow::response(404, "User not found");
-
-        crow::json::wvalue res;
-        res["username"] = username;
-        res["role"] = (userOpt->getRole() == Role::ADMIN) ? "admin" : "user";
-        res["mustChangePassword"] = userOpt->getMustChangePassword();
-        return crow::response(res);
-    });
-
-    // Endpoint: получить список пользователей (только администратор)
-    CROW_ROUTE(app, "/users").methods(crow::HTTPMethod::GET)([&userService](const crow::request& req) {
-        auto userIdOpt = getUserId(req);
-        if (!userIdOpt) return crow::response(401, "Unauthorized");
-
-        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? userService.authenticate(userIdOpt.value(), "") : std::nullopt;
-        if (!currentUserOpt || !isAdmin(*currentUserOpt)) return crow::response(403, "Forbidden");
-
-        // В реальном приложении получаем из репозитория полный список
-        // Здесь заглушка с примером
-        crow::json::wvalue res;
-        res["users"] = crow::json::wvalue::list({"user1", "admin", "user2"});
-        return crow::response(res);
-    });
-
-    // Endpoint: удалить пользователя (себя или админу)
-    CROW_ROUTE(app, "/user/<string>").methods(crow::HTTPMethod::DELETE)([&userService](const crow::request& req, std::string username){
-        auto userIdOpt = getUserId(req);
-        if (!userIdOpt) return crow::response(401, "Unauthorized");
-
-        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? userService.authenticate(userIdOpt.value(), "") : std::nullopt;
-        if (!currentUserOpt) return crow::response(401, "Unauthorized");
-
-        if (*userIdOpt != username && !isAdmin(*currentUserOpt)) return crow::response(403, "Forbidden");
-
-        // Нет метода deleteUser, поэтому просто заглушка
-        return crow::response(200, "User deleted (not actually, implement deleteUser in repo)");
-    });
-
-    // Endpoint: изменить роли пользователя - заглушка
-    CROW_ROUTE(app, "/user/<string>/roles").methods(crow::HTTPMethod::PATCH)([&userService](const crow::request& req, std::string username){
-        auto userIdOpt = getUserId(req);
-        if (!userIdOpt) return crow::response(401, "Unauthorized");
-
-        auto currentUserOpt = userService.userExists(userIdOpt.value()) ? userService.authenticate(userIdOpt.value(), "") : std::nullopt;
-        if (!currentUserOpt || !isAdmin(*currentUserOpt)) return crow::response(403, "Forbidden");
-
-        auto body = crow::json::load(req.body);
-        if (!body || !body.has("role")) return crow::response(400, "Invalid JSON");
-
-        // Здесь можно реализовать смену роли, но в User класса нет setter для роли
-        return crow::response(200, "Role changed (stub)");
-    });
-
-    // Endpoint: health check
-    CROW_ROUTE(app, "/health").methods(crow::HTTPMethod::GET)([](const crow::request&){
-        return crow::response(200, "OK");
-    });
-
-    // Endpoint: версия API
-    CROW_ROUTE(app, "/version").methods(crow::HTTPMethod::GET)([](const crow::request&){
-        return crow::response(200, "API Version 1.0");
-    });
-
 
     std::cout << "Server running on port 18080\n";
     app.port(18080).multithreaded().run();

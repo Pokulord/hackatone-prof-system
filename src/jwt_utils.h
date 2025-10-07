@@ -11,7 +11,8 @@ public:
     JwtUtils(std::string secret, int expirationSec = 3600);
 
     std::string generateToken(const std::string& username, const std::string& role);
-    bool verifyToken(const std::string& token, std::string& usernameOut);
+    bool verifyToken(const std::string&, std::string&);
+    bool isTokenExpired(const std::string&);
 };
 
 

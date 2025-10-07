@@ -955,4 +955,5 @@ CMakeFiles/AuthServer.dir/src/main.cpp.o: \
  /usr/include/openssl/param_build.h \
  /home/svyat/Desktop/hackatone-prof-system/src/jwt-cpp/traits/kazuho-picojson/defaults.h \
  /home/svyat/Desktop/hackatone-prof-system/src/jwt-cpp/traits/kazuho-picojson/traits.h \
- /home/svyat/Desktop/hackatone-prof-system/src/jwt-cpp/jwt.h
+ /home/svyat/Desktop/hackatone-prof-system/src/jwt-cpp/jwt.h \
+ /home/svyat/Desktop/hackatone-prof-system/src/InterfaceAdapters/RefreshTokenService.h

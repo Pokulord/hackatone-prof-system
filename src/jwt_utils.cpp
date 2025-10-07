@@ -1,4 +1,5 @@
 #include "jwt_utils.h"
+#include <chrono>
 
 JwtUtils::JwtUtils(std::string secret, int expirationSec) : secretKey(std::move(secret)), tokenExpirationSeconds(expirationSec) {}
 
@@ -17,19 +18,25 @@ std::string JwtUtils::generateToken(const std::string& username, const std::stri
 bool JwtUtils::verifyToken(const std::string& token, std::string& usernameOut) {
     try {
         auto decoded = jwt::decode(token);
-
         auto verifier = jwt::verify()
             .allow_algorithm(jwt::algorithm::hs256{secretKey})
             .with_issuer("auth_server");
-
         verifier.verify(decoded);
 
-        // Получаем username из токена
         usernameOut = decoded.get_payload_claim("username").as_string();
-
-        // Можно добавить проверку срока действия если нужно (jwt-cpp проверяет автоматически)
         return true;
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cerr << "JWT verification failed: " << e.what() << std::endl;
         return false;
+    }
+}
+
+bool JwtUtils::isTokenExpired(const std::string& token) {
+    try {
+        auto decoded = jwt::decode(token);
+        auto exp = decoded.get_expires_at(); // Возвращает std::chrono::system_clock::time_point
+        return std::chrono::system_clock::now() > exp;
+    } catch (...) {
+        return true; // при ошибке считаем, что токен истёк или некорректен
     }
 }
