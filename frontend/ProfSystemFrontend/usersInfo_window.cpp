@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QVBoxLayout>
+#include <QCloseEvent>
 
 UsersInfoWindow::UsersInfoWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -182,6 +183,12 @@ void UsersInfoWindow::onRefreshClicked()
 {
     loadUsers();
     statusBar()->showMessage("Список пользователей обновлен");
+}
+
+void UsersInfoWindow::closeEvent(QCloseEvent *event)
+{
+    emit windowClosed();
+    event->accept();
 }
 
 UsersInfoWindow::~UsersInfoWindow()

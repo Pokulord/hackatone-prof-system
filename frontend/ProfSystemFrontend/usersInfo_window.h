@@ -23,6 +23,12 @@ private slots:
     void onEditUserClicked();
     void onRefreshClicked();
 
+signals:
+    void windowClosed();
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private:
     void setupToolbar();
     void setupTable();

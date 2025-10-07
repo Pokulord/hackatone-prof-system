@@ -38,6 +38,11 @@ void AdminWindow::onUsersClicked() {
     UsersInfoWindow *usersInfoWindow = new UsersInfoWindow();
     usersInfoWindow->show();
     this->hide();
+
+    connect(usersInfoWindow, &UsersInfoWindow::windowClosed, this, [this]() {
+        this->show();
+        this->activateWindow();
+    });
 }
 
 void AdminWindow::onSessionsClicked() {
