@@ -1,6 +1,7 @@
 #include "usersInfo_window.h"
 #include "ui_usersInfo_window.h"
 #include "adduser_dialog.h"
+#include "edituser_dialog.h"
 #include <QToolBar>
 #include <QTableWidget>
 #include <QHeaderView>
@@ -113,6 +114,8 @@ void UsersInfoWindow::onAddUserClicked()
     }
 }
 
+#include "edituser_dialog.h"
+
 void UsersInfoWindow::onEditUserClicked()
 {
     QTableWidget *table = ui->usersTable;
@@ -123,10 +126,33 @@ void UsersInfoWindow::onEditUserClicked()
         return;
     }
 
-    QString currentUser = table->item(row, 0)->text();
-    statusBar()->showMessage("Редактирование: " + currentUser);
+    // Получаем данные из таблицы
+    QString username = table->item(row, 0)->text();
+    QString currentRole = table->item(row, 1)->text();
+    QString currentStatus = table->item(row, 3)->text();
 
-    // TODO: Открыть диалог редактирования
+    EditUserDialog dialog(this);
+    dialog.setUserData(username, UserRoles::getRoleFromName(currentRole), currentStatus);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        UserRoles::Role newRole = dialog.role();
+        QString newStatus = dialog.status();
+
+        if (dialog.shouldResetPassword()) {
+            // TODO: Вызов API для обновления пользователя
+        }
+
+        // Обновляем таблицу
+        table->item(row, 1)->setText(UserRoles::getRoleName(newRole));
+        // TODO: Обновить другие поля когда будут реальные данные
+
+        statusBar()->showMessage("Пользователь " + username + " обновлен");
+
+        qDebug() << "Обновлен пользователь:" << username
+                 << "Роль:" << UserRoles::getRoleName(newRole)
+                 << "Статус:" << newStatus
+                 << "Сброс пароля:" << dialog.shouldResetPassword();
+    }
 }
 
 void UsersInfoWindow::onDeleteUserClicked()

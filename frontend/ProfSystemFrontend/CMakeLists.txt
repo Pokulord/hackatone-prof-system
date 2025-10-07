@@ -32,6 +32,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         adduser_dialog.ui
         adduser_dialog.h adduser_dialog.cpp
         user_roles.h
+        edituser_dialog.ui
+        edituser_dialog.h edituser_dialog.cpp
 
 
 
