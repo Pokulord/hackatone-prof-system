@@ -29,6 +29,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         admin_window.h admin_window.cpp admin_window.ui
         usersInfo_window.h usersInfo_window.cpp
         usersInfo_window.ui
+        adduser_dialog.ui
+        adduser_dialog.h adduser_dialog.cpp
+        user_roles.h
 
 
 

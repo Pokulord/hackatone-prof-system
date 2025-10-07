@@ -1,5 +1,6 @@
 #include "usersInfo_window.h"
 #include "ui_usersInfo_window.h"
+#include "adduser_dialog.h"
 #include <QToolBar>
 #include <QTableWidget>
 #include <QHeaderView>
@@ -14,6 +15,7 @@ UsersInfoWindow::UsersInfoWindow(QWidget *parent)
     ui->setupUi(this);
 
     setWindowTitle("Управление пользователями");
+    setWindowIcon(QIcon("B:/hackatone-prof-system/frontend/ProfSystemFrontend/resources/logo.jpg"));
     setMinimumSize(1000, 600);
 
     setupToolbar();
@@ -71,7 +73,6 @@ void UsersInfoWindow::setupTable()
 void UsersInfoWindow::loadUsers()
 {
     // TODO: Заменить на загрузку из API
-    // Временные тестовые данные
     QTableWidget *table = ui->usersTable;
     table->setRowCount(3);
 
@@ -97,12 +98,18 @@ void UsersInfoWindow::loadUsers()
 
 void UsersInfoWindow::onAddUserClicked()
 {
-    bool ok;
-    QString username = QInputDialog::getText(this, "Добавить пользователя", "Логин:", QLineEdit::Normal, "", &ok);
-    if (ok && !username.isEmpty()) {
+    AddUserDialog dialog(this);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        // Получаем данные из диалога
+        QString username = dialog.username();
+        QString role = dialog.role();
+
         // TODO: Вызов API для создания пользователя
         statusBar()->showMessage("Пользователь " + username + " добавлен");
-        loadUsers(); // Обновляем таблицу
+        loadUsers();
+
+        qDebug() << "Создан пользователь:" << username << role;
     }
 }
 

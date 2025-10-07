@@ -12,7 +12,7 @@ ChangeAdminPassWindow::ChangeAdminPassWindow(QWidget *parent)
     ui->setupUi(this);
 
     setWindowTitle("Смена пароля администратора");
-    setFixedSize(500, 400); // УВЕЛИЧИЛ РАЗМЕР
+    setFixedSize(500, 400);
 
     setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
 
