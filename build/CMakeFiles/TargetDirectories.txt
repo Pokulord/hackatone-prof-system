@@ -1,0 +1,3 @@
+/home/svyat/Desktop/hackaton_ebanton/build/CMakeFiles/AuthServer.dir
+/home/svyat/Desktop/hackaton_ebanton/build/CMakeFiles/edit_cache.dir
+/home/svyat/Desktop/hackaton_ebanton/build/CMakeFiles/rebuild_cache.dir
