@@ -42,6 +42,7 @@ Application::Application() {
               " port=" + std::string(dbport_env);
 
     jwtUtils = std::make_unique<JwtUtils>("supersecretkey");
+    
     userRepo = std::make_shared<PgUserRepository>(connStr);
     userService = std::make_unique<UserService>(userRepo);
     refreshService = std::make_unique<RefreshTokenService>(*userRepo, *jwtUtils);

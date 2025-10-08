@@ -111,7 +111,30 @@ bool PgUserRepository::addExpiredToken(const std::string& token) {
         txn.commit();
         return true;
     } catch (const std::exception& e) {
-        std::cerr << "DB error in addExpiredToken: " << e.what() << std::endl;
+        std::cerr << "Error checking if token is revoked: " << e.what() << std::endl;
         return false;
     }
+}
+
+std::vector<User> PgUserRepository::getAllUsers() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    std::vector<User> users;
+    try {
+        pqxx::connection c(connectionString);
+        pqxx::work txn(c);
+        pqxx::result r = txn.exec("SELECT id, username, password_hash, role, must_change_password FROM users");
+        for (auto row : r) {
+            User user(
+                row[1].as<std::string>(),
+                row[2].as<std::string>(),
+                static_cast<Role>(row[3].as<int>()),
+                row[4].as<bool>()
+            );
+            users.push_back(user);
+        }
+        txn.commit();
+    } catch (const std::exception& e) {
+        std::cerr << "Error getting all users: " << e.what() << std::endl;
+    }
+    return users;
 }

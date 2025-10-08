@@ -135,4 +135,21 @@ void registerAuthEndpoints(crow::SimpleApp& app, UserService& userService,
             return crow::response(500, "Failed to revoke token");
         }
     });
+
+    CROW_ROUTE(app, "/api/auth/validate").methods(crow::HTTPMethod::Get)([&jwtUtils](const crow::request& req) {
+        auto authHeader = req.get_header_value("Authorization");
+        if (authHeader.substr(0, 7) != "Bearer ") {
+            return crow::response(401, "Invalid or missing token");
+        }
+        std::string token = authHeader.substr(7);
+        std::string username;
+
+        if (jwtUtils.verifyToken(token, username)) {
+            crow::json::wvalue res;
+            res["valid"] = true;
+            return crow::response(200, res);
+        } else {
+            return crow::response(401, "Token is invalid or expired");
+        }
+    });
 }
