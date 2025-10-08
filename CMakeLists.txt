@@ -11,6 +11,7 @@ include_directories(
     src/UseCases
     src/InterfaceAdapters
     src/thirdparty
+    src/Logger
 )
 
 add_executable(AuthServer
@@ -30,6 +31,8 @@ add_executable(AuthServer
     src/InterfaceAdapters/RefreshTokenService.cpp
     src/jwt_utils.cpp
     src/loadenv.cpp
+    src/Migrations/MigrationService.cpp
+    src/Logger/Logger.cpp
 )
 
 find_package(OpenSSL REQUIRED)

@@ -9,6 +9,7 @@
 
 #include "InterfaceAdapters/PgRoleRepository.h"
 #include "UseCases/RoleService.h"
+#include "Logger/Logger.h"
 
 class Application {
 public:
@@ -18,6 +19,7 @@ public:
 private:
     crow::SimpleApp app;
     std::string connStr;
+    std::unique_ptr<Logger> logger;
     std::shared_ptr<PgUserRepository> userRepo;
     std::shared_ptr<PgRoleRepository> roleRepo;
     std::unique_ptr<UserService> userService;

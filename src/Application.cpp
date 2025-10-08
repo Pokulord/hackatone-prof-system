@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "loadenv.h"
 #include "Endpoints/endpoints.h"
+#include "Migrations/MigrationService.h"
 #include <iostream>
 #include <stdexcept>
 #include <pqxx/pqxx>
@@ -21,8 +22,9 @@ bool isUsersTableEmpty(const std::string& connStr) {
 
 Application::Application() {
     setlocale(LC_ALL, "ru_RU.utf8");
-    if (EnvLoader::load_file(".env") < 0)
+    if (EnvLoader::load_file(".env") < 0) {
         throw std::runtime_error("Failed to open .env");
+    }
 
     const char* dbname_env = std::getenv("DB_NAME");
     const char* dbuser_env = std::getenv("DB_USER");
@@ -39,6 +41,16 @@ Application::Application() {
               " password=" + std::string(dbpass_env) +
               " hostaddr=" + std::string(dbhost_env) +
               " port=" + std::string(dbport_env);
+
+    try {
+        MigrationService migrationService(connStr, "migrations");
+        migrationService.runMigrations();
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to run migrations: " << e.what() << std::endl;
+        throw;
+    }
+
+    logger = std::make_unique<Logger>("app.log");
 
     jwtUtils = std::make_unique<JwtUtils>("supersecretkey");
     
@@ -57,7 +69,7 @@ Application::Application() {
 }
 
 void Application::run() {
-    registerEndpoints(app, *userService, *jwtUtils, *refreshService, *userRepo, *roleService);
+    registerEndpoints(app, *userService, *jwtUtils, *refreshService, *userRepo, *roleService, *logger);
 
     std::cout << "Server running on port 18080" << std::endl;
     app.port(18080).multithreaded().run();

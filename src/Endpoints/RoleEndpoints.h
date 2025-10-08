@@ -4,4 +4,6 @@
 #include "../UseCases/RoleService.h"
 #include "../jwt_utils.h"
 
-void registerRoleEndpoints(crow::SimpleApp& app, RoleService& roleService, JwtUtils& jwtUtils);
+#include "../Logger/Logger.h"
+
+void registerRoleEndpoints(crow::SimpleApp& app, RoleService& roleService, JwtUtils& jwtUtils, Logger& logger);

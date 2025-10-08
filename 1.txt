@@ -1,0 +1,97 @@
+Версия MSBuild 17.13.19+0d9f5a35a для .NET Framework
+
+  main.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(12,9): error C2143: синтаксическая ошибка: отсутствие "}" перед "константа" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(12,9): error C2059: синтаксическая ошибка: константа [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(13,5): error C2143: синтаксическая ошибка: отсутствие ";" перед "}" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(13,5): error C2238: непредвиденные лексемы перед ";" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(15,21): error C2059: синтаксическая ошибка: const [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(16,10): error C2182: "log": недопустимое использование "void" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(16,10): error C2365: log: переопределение; предыдущим определением было "функция" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(16,14): error C2065: Level: необъявленный идентификатор [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(16,20): error C2146: синтаксическая ошибка: отсутствие ")" перед идентификатором "level" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(18,1): error C2059: синтаксическая ошибка: private [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(19,31): error C2065: Level: необъявленный идентификатор [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(19,37): error C2146: синтаксическая ошибка: отсутствие ")" перед идентификатором "level" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(22,1): error C2059: синтаксическая ошибка: } [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(22,1): error C2143: синтаксическая ошибка: отсутствие ";" перед "}" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/main.cpp")
+  
+  Application.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(12,9): error C2143: синтаксическая ошибка: отсутствие "}" перед "константа" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(12,9): error C2059: синтаксическая ошибка: константа [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(13,5): error C2143: синтаксическая ошибка: отсутствие ";" перед "}" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(13,5): error C2238: непредвиденные лексемы перед ";" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(15,21): error C2059: синтаксическая ошибка: const [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(16,10): error C2182: "log": недопустимое использование "void" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(16,10): error C2365: log: переопределение; предыдущим определением было "функция" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(16,14): error C2065: Level: необъявленный идентификатор [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(16,20): error C2146: синтаксическая ошибка: отсутствие ")" перед идентификатором "level" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(18,1): error C2059: синтаксическая ошибка: private [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(19,31): error C2065: Level: необъявленный идентификатор [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(19,37): error C2146: синтаксическая ошибка: отсутствие ")" перед идентификатором "level" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(22,1): error C2059: синтаксическая ошибка: } [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+C:\Users\Merrow\source\plusoedusi\src\Logger\Logger.h(22,1): error C2143: синтаксическая ошибка: отсутствие ";" перед "}" [C:\Users\Merrow\source\plusoedusi\build\AuthServer.vcxproj]
+  (компиляция исходного файла "../src/Application.cpp")
+  
+  endpoints.cpp

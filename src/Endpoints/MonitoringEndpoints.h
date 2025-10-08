@@ -2,4 +2,6 @@
 
 #include "../crow_all.h"
 
-void registerMonitoringEndpoints(crow::SimpleApp& app);
+#include "../Logger/Logger.h"
+
+void registerMonitoringEndpoints(crow::SimpleApp& app, Logger& logger);
