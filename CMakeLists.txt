@@ -11,6 +11,7 @@ include_directories(
     src/UseCases
     src/InterfaceAdapters
     src/thirdparty
+    src/Logger
 )
 
 add_executable(AuthServer
@@ -20,12 +21,18 @@ add_executable(AuthServer
     src/Endpoints/AuthEndpoints.cpp
     src/Endpoints/UserEndpoints.cpp
     src/Endpoints/MonitoringEndpoints.cpp
+    src/Endpoints/RoleEndpoints.cpp
     src/Entities/User.cpp
+    src/Entities/Role.cpp
     src/UseCases/UserService.cpp
+    src/UseCases/RoleService.cpp
     src/InterfaceAdapters/PgUserRepository.cpp
+    src/InterfaceAdapters/PgRoleRepository.cpp
     src/InterfaceAdapters/RefreshTokenService.cpp
     src/jwt_utils.cpp
     src/loadenv.cpp
+    src/Migrations/MigrationService.cpp
+    src/Logger/Logger.cpp
 )
 
 find_package(OpenSSL REQUIRED)

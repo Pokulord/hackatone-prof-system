@@ -6,4 +6,10 @@
 #include "../InterfaceAdapters/RefreshTokenService.h"
 #include "../InterfaceAdapters/PgUserRepository.h"
 
-void registerAuthEndpoints(crow::SimpleApp& app, UserService& userService, JwtUtils& jwtUtils, RefreshTokenService& refreshService, PgUserRepository& userRepo);
+#include "../Logger/Logger.h"
+
+
+
+void registerAuthEndpoints(crow::SimpleApp& app, UserService& userService, 
+
+    JwtUtils& jwtUtils, RefreshTokenService& refreshService, PgUserRepository& userRepo, Logger& logger);
