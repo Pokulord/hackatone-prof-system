@@ -76,6 +76,14 @@ AuthWindow::AuthWindow(QWidget *parent)
     , ui(new Ui::AuthWindow)
 {
     ui->setupUi(this);
+
+    rateLimitTimer = new QTimer(this);
+    rateLimitTimer->setSingleShot(true);
+    connect(rateLimitTimer, &QTimer::timeout, this, &AuthWindow::onRateLimitTimeout);
+
+    progressTimer = new QTimer(this);
+    connect(progressTimer, &QTimer::timeout, this, &AuthWindow::updateRateLimitProgress);
+
     initializeWindow();
     setupStyles();
     setupLayout();
@@ -149,6 +157,14 @@ void AuthWindow::setupLayout()
     verticalLayout->addStretch();
     verticalLayout->addWidget(ui->groupBox);
     verticalLayout->addStretch();
+
+    rateLimitProgress = new QProgressBar();
+    rateLimitProgress->setRange(0, LOCKOUT_TIME_MS / 1000);
+    rateLimitProgress->setValue(0);
+    rateLimitProgress->setFormat("Блокировка: %v сек");
+    rateLimitProgress->setVisible(false);
+
+    verticalLayout->addWidget(rateLimitProgress);
 }
 
 void AuthWindow::setupConnections()
@@ -167,6 +183,12 @@ void AuthWindow::onLoginClicked()
     const QString username = ui->usernameEdit->text();
     QString password = ui->passwordEdit->text();
 
+    if (isRateLimited) {
+        ui->errorLabel->setText("Слишком много попыток. Попробуйте позже.");
+        ui->errorLabel->setVisible(true);
+        return;
+    }
+
     if (username.isEmpty()) {
         ui->errorLabel->setText("Введите логин");
         ui->errorLabel->setVisible(true);
@@ -181,6 +203,11 @@ void AuthWindow::onLoginClicked()
         return;
     }
 
+    QDateTime now = QDateTime::currentDateTime();
+    if (lastAttemptTime.isValid() && lastAttemptTime.msecsTo(now) > ATTEMPT_WINDOW_MS) {
+        failedAttempts = 0;
+    }
+
     // TODO: Заменить хардкод на вызов API бэкенда
     if (username == "admin" && password == "admin"){
         handleSuccessfulLogin();
@@ -188,12 +215,20 @@ void AuthWindow::onLoginClicked()
         handleFailedLogin();
     }
 
+    lastAttemptTime = now;
     password.fill('0');
 }
 
 void AuthWindow::handleSuccessfulLogin()
 {
-    qDebug() << "Успешный вход!";
+    failedAttempts = 0;
+    isRateLimited = false;
+
+    if (rateLimitTimer->isActive()) {
+        rateLimitTimer->stop();
+    }
+
+    qDebug() << "Успешный вход! Rate limit сброшен.";
     ui->errorLabel->setVisible(false);
 
     // TODO: Получить от бэкенда флаг необходимости смены пароля
@@ -228,11 +263,113 @@ void AuthWindow::openAdminWindow()
 
 void AuthWindow::handleFailedLogin()
 {
-    ui->errorLabel->setText("Неверный логин или пароль");
+    failedAttempts++;
+
+    if (failedAttempts >= MAX_ATTEMPTS) {
+        activateRateLimit();
+        return;
+    }
+
+    int remainingAttempts = MAX_ATTEMPTS - failedAttempts;
+    ui->errorLabel->setText(
+        QString("Неверный логин или пароль. Осталось попыток: %1")
+            .arg(remainingAttempts)
+        );
     ui->errorLabel->setVisible(true);
+
+    updateRateLimitUI();
+}
+
+void AuthWindow::activateRateLimit()
+{
+    isRateLimited = true;
+    rateLimitTimer->start(LOCKOUT_TIME_MS);
+
+    // Настраиваем прогресс-бар
+    rateLimitProgress->setVisible(true);
+    rateLimitProgress->setValue(LOCKOUT_TIME_MS / 1000);
+    progressTimer->start(1000); // Обновляем каждую секунду
+
+    ui->errorLabel->setText("Превышено количество попыток входа");
+    ui->errorLabel->setVisible(true);
+
+    updateRateLimitUI();
+}
+
+void AuthWindow::updateRateLimitProgress()
+{
+    if (!isRateLimited) return;
+
+    int secondsLeft = rateLimitTimer->remainingTime() / 1000;
+    rateLimitProgress->setValue(secondsLeft);
+
+    if (secondsLeft <= 0) {
+        progressTimer->stop();
+    }
+}
+
+void AuthWindow::onRateLimitTimeout()
+{
+    isRateLimited = false;
+    failedAttempts = 0;
+
+    if (progressTimer->isActive()) {
+        progressTimer->stop();
+    }
+
+    ui->errorLabel->setVisible(false);
+    rateLimitProgress->setVisible(false);
+    updateRateLimitUI();
+
+    qDebug() << "Rate limit deactivated";
+}
+
+void AuthWindow::updateRateLimitUI()
+{
+    bool inputsEnabled = !isRateLimited;
+
+    ui->usernameEdit->setEnabled(inputsEnabled);
+    ui->passwordEdit->setEnabled(inputsEnabled);
+    ui->loginButton->setEnabled(inputsEnabled);
+    ui->showPasswordCheckbox->setEnabled(inputsEnabled);
+
+    if (isRateLimited) {
+        int secondsLeft = rateLimitTimer->remainingTime() / 1000;
+        int minutes = secondsLeft / 60;
+        int seconds = secondsLeft % 60;
+
+        ui->loginButton->setText(
+            QString("Блокировка (%1:%2)")
+                .arg(minutes, 2, 10, QLatin1Char('0'))
+                .arg(seconds, 2, 10, QLatin1Char('0'))
+            );
+
+        ui->loginButton->setStyleSheet(
+            StyleConstants::BUTTON_STYLE
+                .arg("#95a5a6")  // Серый цвет
+                .arg("#7f8c8d")
+                .arg("#636e72")
+            );
+    } else {
+        ui->loginButton->setText("Войти");
+        ui->loginButton->setStyleSheet(
+            StyleConstants::BUTTON_STYLE
+                .arg(StyleConstants::PRIMARY_COLOR)
+                .arg(StyleConstants::HOVER_COLOR)
+                .arg(StyleConstants::PRESSED_COLOR)
+            );
+    }
 }
 
 AuthWindow::~AuthWindow()
 {
+    if (rateLimitTimer && rateLimitTimer->isActive()) {
+        rateLimitTimer->stop();
+    }
+    if (progressTimer && progressTimer->isActive()) {
+        progressTimer->stop();
+    }
+    delete rateLimitTimer;
+    delete progressTimer;
     delete ui;
 }
