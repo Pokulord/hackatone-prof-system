@@ -146,6 +146,75 @@ int main() {
         }
     });
 
+
+
+    // Logout endpoint
+    CROW_ROUTE(app, "/logout").methods(crow::HTTPMethod::POST)([&jwtUtils, &userRepo](const crow::request& req) {
+        auto authHeader = req.get_header_value("Authorization");
+        if (authHeader.substr(0,7) != "Bearer ")
+            return crow::response(401, "Unauthorized");
+
+        std::string token = authHeader.substr(7);
+        std::string username;
+        if (!jwtUtils.verifyToken(token, username)) {
+            return crow::response(401, "Unauthorized");
+        }
+
+        bool revoked = userRepo->addExpiredToken(token);
+        if (revoked) {
+            return crow::response(200, "Logged out. Token revoked");
+        } else {
+            return crow::response(500, "Failed to revoke token");
+        }
+    });
+
+
+    CROW_ROUTE(app, "/revoke").methods(crow::HTTPMethod::POST)([&jwtUtils, &userRepo](const crow::request& req) {
+    // 1. Проверка: авторизован ли вызывающий и является ли он администратором
+    auto authHeader = req.get_header_value("Authorization");
+    if (authHeader.substr(0,7) != "Bearer ")
+        return crow::response(401, "Unauthorized");
+
+    std::string adminToken = authHeader.substr(7);
+    std::string adminUsername;
+    try {
+        auto decoded = jwt::decode(adminToken);
+        auto verifier = jwt::verify()
+            .allow_algorithm(jwt::algorithm::hs256{"supersecretkey"})
+            .with_issuer("auth_server");
+        verifier.verify(decoded);
+
+        adminUsername = decoded.get_payload_claim("username").as_string();
+        std::string role = decoded.get_payload_claim("role").as_string();
+        if (role != "admin") {
+            return crow::response(403, "Only admin allowed");
+        }
+    } catch (...) {
+        return crow::response(401, "Invalid or expired admin token");
+    }
+
+    // 2. Получаем токен жертвы для отзыва из JSON
+    auto body = crow::json::load(req.body);
+    if (!body || !body.has("token"))
+        return crow::response(400, "Missing 'token' field in body");
+    std::string targetToken = body["token"].s();
+
+    // 3. Пробуем декодировать targetToken для проверки структуры
+    try {
+        jwt::decode(targetToken);
+    } catch (...) {
+        return crow::response(400, "Invalid target token format");
+    }
+
+    // 4. Отзываем токен пользователя (заносим в базу)
+    if (userRepo->addExpiredToken(targetToken)) {
+        return crow::response(200, "Target token revoked");
+    } else {
+        return crow::response(500, "Failed to revoke token");
+    }
+});
+
+
     std::cout << "Server running on port 18080\n";
     app.port(18080).multithreaded().run();
 }
