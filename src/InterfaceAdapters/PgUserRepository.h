@@ -18,4 +18,5 @@ public:
     std::vector<User> getAllUsers() override;
     bool isTokenRevoked(const std::string& token) override;
     bool addExpiredToken(const std::string& token) override;
+    bool deleteUser(const std::string &username);
 };

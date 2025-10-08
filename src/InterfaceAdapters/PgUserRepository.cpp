@@ -116,6 +116,23 @@ bool PgUserRepository::addExpiredToken(const std::string& token) {
     }
 }
 
+bool PgUserRepository::deleteUser(const std::string& username) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    try {
+        pqxx::connection c(connectionString);
+        pqxx::work txn(c);
+
+        c.prepare("delete_user", "DELETE FROM users WHERE username = $1");
+        pqxx::result r = txn.exec_prepared("delete_user", username);
+
+        txn.commit();
+        return r.affected_rows() > 0;
+    } catch (const std::exception& e) {
+        std::cerr << "DB error in deleteUser: " << e.what() << std::endl;
+        return false;
+    }
+}
+
 std::vector<User> PgUserRepository::getAllUsers() {
     std::lock_guard<std::mutex> lock(mutex_);
     std::vector<User> users;

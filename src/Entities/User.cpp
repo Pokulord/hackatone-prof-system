@@ -13,6 +13,14 @@ bool User::getMustChangePassword() const { return mustChangePassword; }
 void User::setPasswordHash(const std::string& newPasswordHash) { passwordHash = newPasswordHash; }
 void User::setMustChangePassword(bool value) { mustChangePassword = value; }
 
+void User::setPassword(const std::string& newPassword) {
+    passwordHash = hashPassword(newPassword);
+}
+
+void User::setRole(Role newRole) {
+    role = newRole;
+}
+
 bool User::verifyPassword(const std::string& password) const {
     return hashPassword(password) == passwordHash;
 }

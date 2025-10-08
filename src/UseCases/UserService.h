@@ -29,4 +29,6 @@ public:
     bool userExists(const std::string& username);
     std::optional<User> getUserByUsername(const std::string& username);
     std::vector<User> getAllUsers();
+    bool updateUser(const std::string& username, const std::optional<std::string>& password, const std::optional<Role>& role, const std::optional<bool>& mustChangePassword);
+    bool deleteUser(const std::string& username);
 };

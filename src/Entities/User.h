@@ -20,6 +20,8 @@ public:
 
     void setPasswordHash(const std::string& newPasswordHash);
     void setMustChangePassword(bool value);
+    void setPassword(const std::string& newPassword);
+    void setRole(Role newRole);
 
     bool verifyPassword(const std::string& password) const;
     static std::string hashPassword(const std::string& password);
