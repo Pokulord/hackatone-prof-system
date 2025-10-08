@@ -43,7 +43,9 @@ Application::Application() {
     jwtUtils = std::make_unique<JwtUtils>("supersecretkey");
     
     userRepo = std::make_shared<PgUserRepository>(connStr);
+    roleRepo = std::make_shared<PgRoleRepository>(connStr);
     userService = std::make_unique<UserService>(userRepo);
+    roleService = std::make_unique<RoleService>(roleRepo);
     refreshService = std::make_unique<RefreshTokenService>(*userRepo, *jwtUtils);
 
     if (isUsersTableEmpty(connStr)) {
@@ -55,7 +57,7 @@ Application::Application() {
 }
 
 void Application::run() {
-    registerEndpoints(app, *userService, *jwtUtils, *refreshService, *userRepo);
+    registerEndpoints(app, *userService, *jwtUtils, *refreshService, *userRepo, *roleService);
 
     std::cout << "Server running on port 18080" << std::endl;
     app.port(18080).multithreaded().run();
