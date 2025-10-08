@@ -34,6 +34,14 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         user_roles.h
         edituser_dialog.ui
         edituser_dialog.h edituser_dialog.cpp
+        statistics_window.ui
+        statistics_window.h statistics_window.cpp
+        activeSessions_window.h activeSessions_window.cpp
+        activeSessions_window.ui
+
+
+
+
 
 
 

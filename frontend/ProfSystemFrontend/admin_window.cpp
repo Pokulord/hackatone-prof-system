@@ -1,4 +1,5 @@
 #include "admin_window.h"
+#include "statistics_window.h"
 #include "ui_admin_window.h"
 #include "usersInfo_window.h"
 #include <QStatusBar>
@@ -31,7 +32,15 @@ void AdminWindow::centerContent()
 }
 
 void AdminWindow::onStatisticsClicked() {
-    statusBar()->showMessage("Открыта статистика");
+    StatisticsWindow *statsWindow = new StatisticsWindow();
+    statsWindow->setAttribute(Qt::WA_DeleteOnClose);
+    statsWindow->show();
+    this->hide();
+
+    connect(statsWindow, &StatisticsWindow::windowClosed, this, [this]() {
+        this->show();
+        this->activateWindow();
+    });
 }
 
 void AdminWindow::onUsersClicked() {
