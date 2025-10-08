@@ -40,6 +40,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         activeSessions_window.ui
         auditLog_window.h auditLog_window.cpp
         auditLog_window.ui
+        ApiClient.h
+        ApiClient.cpp
 
 
 
@@ -90,6 +92,11 @@ install(TARGETS ProfSystemFrontend
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+
+find_package(Qt6 COMPONENTS Core Network REQUIRED)
+target_link_libraries(ProfSystemFrontend PRIVATE Qt6::Core Qt6::Network)
+
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ProfSystemFrontend)

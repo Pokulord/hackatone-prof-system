@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QMessageBox>
 
+
 namespace StyleConstants {
     const QString FONT_FAMILY = "Arial";
     const int DEFAULT_FONT_SIZE = 12;
