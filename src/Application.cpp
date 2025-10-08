@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "loadenv.h"
 #include "Endpoints/endpoints.h"
-#include "Migrations/MigrationService.h"
+#include "migrations/MigrationService.h"
 #include <iostream>
 #include <stdexcept>
 #include <pqxx/pqxx>
