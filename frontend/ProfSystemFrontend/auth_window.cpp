@@ -10,6 +10,8 @@
 #include <QLabel>
 #include <QDebug>
 #include <QMessageBox>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 
 namespace StyleConstants {
@@ -72,30 +74,33 @@ namespace StyleConstants {
         "}";
 }
 
-AuthWindow::AuthWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::AuthWindow)
-{
-    ui->setupUi(this);
+    AuthWindow::AuthWindow(QWidget *parent)
+        : QMainWindow(parent)
+        , ui(new Ui::AuthWindow)
+    {
+        ui->setupUi(this);
 
-    rateLimitTimer = new QTimer(this);
-    rateLimitTimer->setSingleShot(true);
-    connect(rateLimitTimer, &QTimer::timeout, this, &AuthWindow::onRateLimitTimeout);
+        rateLimitTimer = new QTimer(this);
+        rateLimitTimer->setSingleShot(true);
+        connect(rateLimitTimer, &QTimer::timeout, this, &AuthWindow::onRateLimitTimeout);
 
-    progressTimer = new QTimer(this);
-    connect(progressTimer, &QTimer::timeout, this, &AuthWindow::updateRateLimitProgress);
+        progressTimer = new QTimer(this);
+        connect(progressTimer, &QTimer::timeout, this, &AuthWindow::updateRateLimitProgress);
 
-    initializeWindow();
-    setupStyles();
-    setupLayout();
-    setupConnections();
-}
+        apiClient = new ApiClient(this);
+        connect(apiClient, &ApiClient::loginFinished, this, &AuthWindow::onLoginResponse);
 
-void AuthWindow::initializeWindow()
-{
-    setWindowTitle("Прософт - Авторизация");
-    setWindowIcon(QIcon("B:/hackatone-prof-system/frontend/ProfSystemFrontend/resources/logo.jpg"));
-}
+        initializeWindow();
+        setupStyles();
+        setupLayout();
+        setupConnections();
+    }
+
+    void AuthWindow::initializeWindow()
+    {
+        setWindowTitle("Прософт - Авторизация");
+        setWindowIcon(QIcon("B:/hackatone-prof-system/frontend/ProfSystemFrontend/resources/logo.jpg"));
+    }
 
 void AuthWindow::setupStyles()
 {
@@ -209,104 +214,74 @@ void AuthWindow::onLoginClicked()
         failedAttempts = 0;
     }
 
-    // TODO: Заменить хардкод на вызов API бэкенда
-    if (username == "admin" && password == "admin"){
-        handleSuccessfulLogin();
-    } else {
-        handleFailedLogin();
-    }
-
+    apiClient->loginUser(username, password);
     lastAttemptTime = now;
     password.fill('0');
 }
 
-void AuthWindow::handleSuccessfulLogin()
+void AuthWindow::onLoginResponse(const QByteArray& response)
 {
-    failedAttempts = 0;
-    isRateLimited = false;
-
-    if (rateLimitTimer->isActive()) {
-        rateLimitTimer->stop();
+    QJsonDocument json = QJsonDocument::fromJson(response);
+    if (!json.isObject()) {
+        ui->errorLabel->setText("Ошибка сервера");
+        ui->errorLabel->setVisible(true);
+        return;
     }
+    QJsonObject obj = json.object();
+    if (obj.contains("access_token")) {
+        bool mustChangePassword = obj["mustChangePassword"].toBool();
+        failedAttempts = 0;
+        isRateLimited = false;
+        ui->errorLabel->setVisible(false);
 
-    qDebug() << "Успешный вход! Rate limit сброшен.";
-    ui->errorLabel->setVisible(false);
-
-    // TODO: Получить от бэкенда флаг необходимости смены пароля
-    bool needPasswordChange = true;
-
-    if (needPasswordChange) {
-        showPasswordChangeDialog();
+        if (mustChangePassword) {
+            showPasswordChangeDialog();
+        } else {
+            openAdminWindow();
+        }
     } else {
-        openAdminWindow();
+        failedAttempts++;
+        if (failedAttempts >= MAX_ATTEMPTS) {
+            activateRateLimit();
+            return;
+        }
+        QString errText = obj["error"].toString();
+        ui->errorLabel->setText(errText.isEmpty() ? "Неверный логин или пароль" : errText);
+        ui->errorLabel->setVisible(true);
     }
 }
 
 void AuthWindow::showPasswordChangeDialog()
 {
     ChangeAdminPassDialog dialog(this);
-
-    int result = dialog.exec();
-
-    if (result == QDialog::Accepted) {
-        qDebug() << "Пароль успешно изменен, открываем админку";
-        openAdminWindow();
-    }
+    if (dialog.exec() == QDialog::Accepted) openAdminWindow();
 }
 
 void AuthWindow::openAdminWindow()
 {
     AdminWindow *adminWindow = new AdminWindow();
     adminWindow->show();
-
     this->close();
-}
-
-void AuthWindow::handleFailedLogin()
-{
-    failedAttempts++;
-
-    if (failedAttempts >= MAX_ATTEMPTS) {
-        activateRateLimit();
-        return;
-    }
-
-    int remainingAttempts = MAX_ATTEMPTS - failedAttempts;
-    ui->errorLabel->setText(
-        QString("Неверный логин или пароль. Осталось попыток: %1")
-            .arg(remainingAttempts)
-        );
-    ui->errorLabel->setVisible(true);
-
-    updateRateLimitUI();
 }
 
 void AuthWindow::activateRateLimit()
 {
     isRateLimited = true;
     rateLimitTimer->start(LOCKOUT_TIME_MS);
-
-    // Настраиваем прогресс-бар
     rateLimitProgress->setVisible(true);
     rateLimitProgress->setValue(LOCKOUT_TIME_MS / 1000);
-    progressTimer->start(1000); // Обновляем каждую секунду
-
+    progressTimer->start(1000);
     ui->errorLabel->setText("Превышено количество попыток входа");
     ui->errorLabel->setVisible(true);
-
     updateRateLimitUI();
 }
 
 void AuthWindow::updateRateLimitProgress()
 {
     if (!isRateLimited) return;
-
     int secondsLeft = rateLimitTimer->remainingTime() / 1000;
     rateLimitProgress->setValue(secondsLeft);
-
-    if (secondsLeft <= 0) {
-        progressTimer->stop();
-    }
+    if (secondsLeft <= 0) progressTimer->stop();
 }
 
 void AuthWindow::onRateLimitTimeout()
@@ -314,21 +289,16 @@ void AuthWindow::onRateLimitTimeout()
     isRateLimited = false;
     failedAttempts = 0;
 
-    if (progressTimer->isActive()) {
-        progressTimer->stop();
-    }
+    if (progressTimer->isActive()) progressTimer->stop();
 
     ui->errorLabel->setVisible(false);
     rateLimitProgress->setVisible(false);
     updateRateLimitUI();
-
-    qDebug() << "Rate limit deactivated";
 }
 
 void AuthWindow::updateRateLimitUI()
 {
     bool inputsEnabled = !isRateLimited;
-
     ui->usernameEdit->setEnabled(inputsEnabled);
     ui->passwordEdit->setEnabled(inputsEnabled);
     ui->loginButton->setEnabled(inputsEnabled);
@@ -338,16 +308,14 @@ void AuthWindow::updateRateLimitUI()
         int secondsLeft = rateLimitTimer->remainingTime() / 1000;
         int minutes = secondsLeft / 60;
         int seconds = secondsLeft % 60;
-
         ui->loginButton->setText(
             QString("Блокировка (%1:%2)")
                 .arg(minutes, 2, 10, QLatin1Char('0'))
                 .arg(seconds, 2, 10, QLatin1Char('0'))
             );
-
         ui->loginButton->setStyleSheet(
             StyleConstants::BUTTON_STYLE
-                .arg("#95a5a6")  // Серый цвет
+                .arg("#95a5a6")
                 .arg("#7f8c8d")
                 .arg("#636e72")
             );
@@ -364,12 +332,8 @@ void AuthWindow::updateRateLimitUI()
 
 AuthWindow::~AuthWindow()
 {
-    if (rateLimitTimer && rateLimitTimer->isActive()) {
-        rateLimitTimer->stop();
-    }
-    if (progressTimer && progressTimer->isActive()) {
-        progressTimer->stop();
-    }
+    if (rateLimitTimer && rateLimitTimer->isActive()) rateLimitTimer->stop();
+    if (progressTimer && progressTimer->isActive()) progressTimer->stop();
     delete rateLimitTimer;
     delete progressTimer;
     delete ui;

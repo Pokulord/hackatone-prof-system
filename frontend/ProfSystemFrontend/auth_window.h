@@ -5,7 +5,7 @@
 #include <QMainWindow>
 #include <QProgressBar>
 #include <QTimer>
-#include "api_client.h"
+#include "ApiClient.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
