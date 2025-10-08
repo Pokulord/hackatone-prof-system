@@ -15,9 +15,13 @@ include_directories(
 
 add_executable(AuthServer
     src/main.cpp
+    src/Application.cpp
+    src/Endpoints/endpoints.cpp
     src/Entities/User.cpp
     src/UseCases/UserService.cpp
     src/InterfaceAdapters/PgUserRepository.cpp
+    src/jwt_utils.cpp
+    src/loadenv.cpp
 )
 
 find_package(OpenSSL REQUIRED)
@@ -34,4 +38,6 @@ target_link_libraries(AuthServer PRIVATE
     Threads::Threads
 )
 
+
+target_include_directories(AuthServer PRIVATE ${CMAKE_SOURCE_DIR}/jwt-cpp/include)
 

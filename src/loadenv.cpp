@@ -5,10 +5,10 @@
 #include <cctype>
 #include <vector>
 
-namespace envloader {
+#include "loadenv.h"
 
 // Trim whitespace from both ends
-inline std::string trim(const std::string &s) {
+std::string EnvLoader::trim(const std::string &s) {
     size_t i = 0;
     size_t j = s.size();
     while (i < j && std::isspace(static_cast<unsigned char>(s[i]))) ++i;
@@ -17,7 +17,7 @@ inline std::string trim(const std::string &s) {
 }
 
 // Parse a possibly quoted value, handling \" and \\ inside quotes
-inline std::string parseValue(const std::string &raw) {
+std::string EnvLoader::parseValue(const std::string &raw) {
     std::string v = trim(raw);
     if (v.size() >= 2 && ((v.front() == '"' && v.back() == '"') || (v.front() == '\'' && v.back() == '\''))) {
         char q = v.front();
@@ -53,7 +53,7 @@ inline std::string parseValue(const std::string &raw) {
 
 // Set env var using setenv on POSIX or putenv on platforms without setenv.
 // Returns true on success.
-inline bool set_env_var(const std::string &key, const std::string &value, bool overwrite = true) {
+bool EnvLoader::set_env_var(const std::string &key, const std::string &value, bool overwrite) {
 #if defined(_WIN32) || defined(_WIN64)
     // Windows _putenv_s is available in C runtime
     int r = 0;
@@ -66,7 +66,7 @@ inline bool set_env_var(const std::string &key, const std::string &value, bool o
 }
 
 // Load .env file. Returns number of variables set.
-inline int load_file(const std::string &path, bool overwrite = true) {
+int EnvLoader::load_file(const std::string &path, bool overwrite) {
     std::ifstream ifs(path.c_str());
     if (!ifs.is_open()) return -1;
     std::string line;
@@ -110,7 +110,7 @@ inline int load_file(const std::string &path, bool overwrite = true) {
 }
 
 // Load from a string (multiple lines). Returns number of variables set.
-inline int load_from_string(const std::string &data, bool overwrite = true) {
+int EnvLoader::load_from_string(const std::string &data, bool overwrite) {
     std::istringstream iss(data);
     std::string line;
     int count = 0;
@@ -146,5 +146,3 @@ inline int load_from_string(const std::string &data, bool overwrite = true) {
     }
     return count;
 }
-
-} // namespace envloader

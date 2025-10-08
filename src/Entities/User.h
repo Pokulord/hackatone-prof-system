@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-enum class Role { ADMIN, USER };
+enum class Role { ADMIN, ENGINEER, GUEST };
 
 class User {
 private:

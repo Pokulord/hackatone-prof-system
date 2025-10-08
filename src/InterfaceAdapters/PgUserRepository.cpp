@@ -7,6 +7,10 @@ PgUserRepository::PgUserRepository(const std::string& connStr) : connectionStrin
     // Конструктор без подготовки запросов, подготовка будет перед выполнением
 }
 
+
+
+
+
 std::optional<User> PgUserRepository::getUserByUsername(const std::string& username) {
     std::lock_guard<std::mutex> lock(mutex_);
     try {
@@ -73,6 +77,41 @@ bool PgUserRepository::updateUser(const User& user) {
         return true;
     } catch (const std::exception& e) {
         std::cerr << "DB error: " << e.what() << "\n";
+        return false;
+    }
+}
+
+
+
+bool PgUserRepository::isTokenRevoked(const std::string& token) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    try {
+        pqxx::connection c(connectionString);
+        pqxx::work txn(c);
+
+        c.prepare("check_revoke", "SELECT 1 FROM revoked_tokens WHERE token = $1 LIMIT 1");
+        auto r = txn.exec_prepared("check_revoke", token);
+
+        return !r.empty();
+    } catch (const std::exception& e) {
+        std::cerr << "DB error in isTokenRevoked: " << e.what() << std::endl;
+        return true; // при ошибке считаем токен отозванным для безопасности
+    }
+}
+
+bool PgUserRepository::addExpiredToken(const std::string& token) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    try {
+        pqxx::connection c(connectionString);
+        pqxx::work txn(c);
+
+        c.prepare("insert_expired", "INSERT INTO revoked_tokens(token, revoked_at) VALUES ($1, NOW()) ON CONFLICT DO NOTHING");
+        txn.exec_prepared("insert_expired", token);
+
+        txn.commit();
+        return true;
+    } catch (const std::exception& e) {
+        std::cerr << "DB error in addExpiredToken: " << e.what() << std::endl;
         return false;
     }
 }

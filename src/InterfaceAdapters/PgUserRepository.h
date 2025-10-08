@@ -14,4 +14,6 @@ public:
     std::optional<User> getUserByUsername(const std::string& username) override;
     bool saveUser(const User& user) override;
     bool updateUser(const User& user) override;
+    bool isTokenRevoked(const std::string& token) override;
+    bool addExpiredToken(const std::string& token) override;
 };
