@@ -215,6 +215,46 @@ int main() {
 });
 
 
+CROW_ROUTE(app, "/api/users/<string>").methods(crow::HTTPMethod::GET)(
+    [&jwtUtils, &userService](const crow::request& req, const std::string& requestedUsername) {
+        auto authHeader = req.get_header_value("Authorization");
+        if (authHeader.substr(0, 7) != "Bearer ")
+            return crow::response(401, "Unauthorized");
+
+        std::string token = authHeader.substr(7);
+        std::string requesterUsername, requesterRole;
+
+        try {
+            auto decoded = jwt::decode(token);
+            auto verifier = jwt::verify()
+                .allow_algorithm(jwt::algorithm::hs256{"supersecretkey"})
+                .with_issuer("auth_server");
+            verifier.verify(decoded);
+
+            requesterUsername = decoded.get_payload_claim("username").as_string();
+            requesterRole = decoded.get_payload_claim("role").as_string();
+        } catch (...) {
+            return crow::response(401, "Invalid token");
+        }
+
+        if (requesterUsername != requestedUsername && requesterRole != "admin")
+            return crow::response(403, "Forbidden");
+
+        auto userOpt = userService.getUserByUsername(requestedUsername);
+        if (!userOpt)
+            return crow::response(404, "User not found");
+
+        crow::json::wvalue res;
+        res["username"] = userOpt->getUsername();
+        res["role"] = (userOpt->getRole() == Role::ADMIN) ? "admin" : "user";
+        res["mustChangePassword"] = userOpt->getMustChangePassword();
+
+        return crow::response(res);
+    }
+);
+
+
+
     std::cout << "Server running on port 18080\n";
     app.port(18080).multithreaded().run();
 }

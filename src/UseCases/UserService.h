@@ -27,4 +27,6 @@ public:
     bool createUser(const std::string& username, const std::string& password, Role role, bool mustChangePassword);
     bool changePassword(const std::string& username, const std::string& newPassword);
     bool userExists(const std::string& username);
+    std::optional<User> getUserByUsername(const std::string& username);
+
 };

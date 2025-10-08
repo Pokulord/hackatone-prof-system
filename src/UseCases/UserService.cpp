@@ -53,3 +53,8 @@ bool UserService::changePassword(const std::string& username, const std::string&
 bool UserService::userExists(const std::string& username) {
     return userRepository->getUserByUsername(username).has_value();
 }
+
+std::optional<User> UserService::getUserByUsername(const std::string& username) {
+    return userRepository->getUserByUsername(username);
+}
+
