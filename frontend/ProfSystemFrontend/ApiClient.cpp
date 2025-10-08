@@ -11,7 +11,7 @@ ApiClient::ApiClient(QObject *parent) : QObject(parent) {
 
 void ApiClient::registerUser(const QString& username, const QString& password) {
     currentRequestType = "register";
-    QNetworkRequest request(QUrl("http://localhost:18080/register"));
+    QNetworkRequest request(QUrl("http://localhost:18080/auth/register"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     QJsonObject body;

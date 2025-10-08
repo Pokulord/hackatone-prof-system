@@ -230,15 +230,27 @@ void AuthWindow::onLoginResponse(const QByteArray& response)
     QJsonObject obj = json.object();
     if (obj.contains("access_token")) {
         bool mustChangePassword = obj["mustChangePassword"].toBool();
+        QString role = obj.value("role").toString();
         failedAttempts = 0;
         isRateLimited = false;
         ui->errorLabel->setVisible(false);
-
-        if (mustChangePassword) {
-            showPasswordChangeDialog();
-        } else {
-            openAdminWindow();
+        if (role == "Admin")
+        {
+            if (mustChangePassword) {
+                showPasswordChangeDialog();
+            } else {        if (mustChangePassword) {
+                    showPasswordChangeDialog();
+                } else {
+                    openAdminWindow();
+                }
+                openAdminWindow();
+            }
         }
+        else
+        {
+            QMessageBox::information(this, "Добро пожаловать", "Успешный вход, но не в качестве админа");
+        }
+
     } else {
         failedAttempts++;
         if (failedAttempts >= MAX_ATTEMPTS) {

@@ -4,4 +4,6 @@
 #include "../UseCases/UserService.h"
 #include "../jwt_utils.h"
 
-void registerUserEndpoints(crow::SimpleApp& app, UserService& userService, JwtUtils& jwtUtils);
+#include "../Logger/Logger.h"
+
+void registerUserEndpoints(crow::SimpleApp& app, UserService& userService, JwtUtils& jwtUtils, Logger& logger);

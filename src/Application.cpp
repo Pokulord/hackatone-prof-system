@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "loadenv.h"
 #include "Endpoints/endpoints.h"
+#include "migrations/MigrationService.h"
 #include <iostream>
 #include <stdexcept>
 #include <pqxx/pqxx>
@@ -41,10 +42,22 @@ Application::Application() {
               " hostaddr=" + std::string(dbhost_env) +
               " port=" + std::string(dbport_env);
 
+    try {
+        MigrationService migrationService(connStr, "migrations");
+        migrationService.runMigrations();
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to run migrations: " << e.what() << std::endl;
+        throw;
+    }
+
+    logger = std::make_unique<Logger>("app.log");
+
     jwtUtils = std::make_unique<JwtUtils>("supersecretkey");
     
     userRepo = std::make_shared<PgUserRepository>(connStr);
+    roleRepo = std::make_shared<PgRoleRepository>(connStr);
     userService = std::make_unique<UserService>(userRepo);
+    roleService = std::make_unique<RoleService>(roleRepo);
     refreshService = std::make_unique<RefreshTokenService>(*userRepo, *jwtUtils);
 
     if (isUsersTableEmpty(connStr)) {
@@ -56,7 +69,7 @@ Application::Application() {
 }
 
 void Application::run() {
-    registerEndpoints(app, *userService, *jwtUtils, *refreshService, *userRepo);
+    registerEndpoints(app, *userService, *jwtUtils, *refreshService, *userRepo, *roleService, *logger);
 
     std::cout << "Server running on port 18080" << std::endl;
     app.port(18080).multithreaded().run();

@@ -1,8 +1,9 @@
 build
-.gemini
-auth-service-spec.md
-speka.md
 .vscode
+<<<<<<< HEAD
 api points.txt
 ctx.txt
 .env
+=======
+.env
+>>>>>>> test_ver

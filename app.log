@@ -1,0 +1,22 @@
+[2025-10-08 18:23:17] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-08 18:23:17] [INFO] User authenticated successfully: rest
+[2025-10-08 18:23:34] [INFO] POST /api/auth/register from 127.0.0.1
+[2025-10-08 18:23:34] [WARNING] Registration failed for user: rest. User may already exist or role is invalid.
+[2025-10-08 18:23:40] [INFO] POST /api/auth/register from 127.0.0.1
+[2025-10-08 18:23:40] [INFO] User registered successfully: ressss
+[2025-10-08 21:30:53] [INFO] POST /api/auth/register from 127.0.0.1
+[2025-10-08 21:30:53] [WARNING] Registration failed for user: ressss. User may already exist or role is invalid.
+[2025-10-08 21:30:58] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-08 21:30:58] [INFO] User authenticated successfully: rest
+[2025-10-08 21:47:52] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-08 21:47:52] [INFO] User authenticated successfully: rest
+[2025-10-08 21:50:23] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-08 21:50:23] [INFO] User authenticated successfully: admin
+[2025-10-08 21:54:05] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-08 21:54:05] [INFO] User authenticated successfully: rest
+[2025-10-08 22:38:52] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-08 22:38:52] [WARNING] Authentication failed for user: ress
+[2025-10-08 22:39:27] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-08 22:39:27] [INFO] User authenticated successfully: rest
+[2025-10-08 22:59:59] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-08 22:59:59] [INFO] User authenticated successfully: rest

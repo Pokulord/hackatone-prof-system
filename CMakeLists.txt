@@ -11,6 +11,7 @@ include_directories(
     src/UseCases
     src/InterfaceAdapters
     src/thirdparty
+    src/Logger
 )
 
 add_executable(AuthServer
@@ -19,14 +20,22 @@ add_executable(AuthServer
     src/Endpoints/endpoints.cpp
     src/Endpoints/AuthEndpoints.cpp
     src/Endpoints/UserEndpoints.cpp
+    src/Endpoints/MonitoringEndpoints.cpp
+    src/Endpoints/RoleEndpoints.cpp
     src/Entities/User.cpp
+    src/Entities/Role.cpp
     src/UseCases/UserService.cpp
+    src/UseCases/RoleService.cpp
     src/InterfaceAdapters/PgUserRepository.cpp
+    src/InterfaceAdapters/PgRoleRepository.cpp
     src/InterfaceAdapters/RefreshTokenService.cpp
     src/jwt_utils.cpp
     src/loadenv.cpp
+    src/migrations/MigrationService.cpp
+    src/Logger/Logger.cpp
 )
 
+<<<<<<< HEAD
 
 find_package(OpenSSL REQUIRED)
 if(OpenSSL_FOUND)
@@ -44,6 +53,24 @@ target_link_libraries(AuthServer ${LIBPQXX_LIBRARIES})
 
 find_package(Threads REQUIRED)
 target_link_libraries(AuthServer Threads::Threads)
+=======
+find_package(OpenSSL REQUIRED)
+find_library(PQXX_LIBRARY NAMES pqxx)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PQXX REQUIRED libpqxx)
+
+target_include_directories(AuthServer PRIVATE ${PQXX_INCLUDE_DIRS})
+
+find_package(Threads REQUIRED)
+target_link_libraries(AuthServer PRIVATE
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    ${PQXX_LIBRARIES}
+    Threads::Threads
+)
+
+>>>>>>> test_ver
 
 target_include_directories(AuthServer PRIVATE ${CMAKE_SOURCE_DIR}/jwt-cpp/include)
 

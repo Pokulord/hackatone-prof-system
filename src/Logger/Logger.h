@@ -9,7 +9,11 @@ public:
         DEBUG,
         INFO,
         WARNING,
+<<<<<<< HEAD
         ERROR
+=======
+        ERR
+>>>>>>> test_ver
     };
 
     explicit Logger(const std::string& filename);
@@ -18,6 +22,11 @@ public:
 private:
     std::string levelToString(Level level);
     std::ofstream outFile;
+<<<<<<< HEAD
     std::mutex mtx; // для потокобезопасности
 };
 
+=======
+    std::mutex mtx;
+};
+>>>>>>> test_ver
