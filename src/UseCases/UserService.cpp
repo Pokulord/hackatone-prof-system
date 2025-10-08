@@ -43,8 +43,39 @@ std::vector<User> UserService::getAllUsers() {
     return userRepository->getAllUsers();
 }
 
-bool UserService::createUser(const std::string& username, const std::string& password, Role role, bool mustChangePassword) {
-    if (userRepository->getUserByUsername(username)) return false;
+bool UserService::updateUser(const std::string& username, const std::optional<std::string>& password, const std::optional<std::string>& role, const std::optional<bool>& mustChangePassword) {
+    auto userOpt = userRepository->getUserByUsername(username);
+    if (!userOpt) {
+        return false;
+    }
+
+    User user = *userOpt;
+    if (password) {
+        user.setPassword(*password);
+    }
+    if (role) {
+        user.setRole(*role);
+    }
+    if (mustChangePassword) {
+        user.setMustChangePassword(*mustChangePassword);
+    }
+
+    return userRepository->updateUser(user);
+}
+
+bool UserService::deleteUser(const std::string& username) {
+    return userRepository->deleteUser(username);
+}
+
+bool UserService::createUser(const std::string& username, const std::string& password, const std::string& role, bool mustChangePassword, bool isAdminCreation) {
+    if (userRepository->getUserByUsername(username)) {
+        return false; // User already exists
+    }
+
+    if (!isAdminCreation && role != "Engineer" && role != "Guest") {
+        return false; // Invalid role for user creation
+    }
+
     std::string hashed = User::hashPassword(password);
     User user(username, hashed, role, mustChangePassword);
     return userRepository->saveUser(user);

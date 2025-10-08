@@ -26,9 +26,13 @@ void registerAuthEndpoints(crow::SimpleApp& app, UserService& userService,
 
         std::string username = body["username"].s();
         std::string password = body["password"].s();
+        std::string role = "Guest"; // Default role
+        if (body.has("role")) {
+            role = body["role"].s();
+        }
 
-        bool res = userService.createUser(username, password, Role::ENGINEER, false);
-        return res ? crow::response(200, "Registered") : crow::response(409, "User exists");
+        bool res = userService.createUser(username, password, role, false);
+        return res ? crow::response(200, "Registered") : crow::response(400, "Invalid role or user exists");
     });
 
     CROW_ROUTE(app, "/api/auth/login").methods(crow::HTTPMethod::Post)([&userService, &jwtUtils](const crow::request& req) {
@@ -42,7 +46,7 @@ void registerAuthEndpoints(crow::SimpleApp& app, UserService& userService,
         auto userOpt = userService.authenticate(username, password);
         if (!userOpt) return crow::response(401, "Auth failed");
 
-        std::string role = (userOpt->getRole() == Role::ADMIN) ? "admin" : "user";
+        std::string role = userOpt->getRole();
         std::string token = jwtUtils.generateToken(username, role);
 
         const char* userEnv = getenv("USER");

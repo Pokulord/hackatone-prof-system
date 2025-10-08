@@ -27,7 +27,7 @@ std::optional<User> PgUserRepository::getUserByUsername(const std::string& usern
         User user(
             row["username"].c_str(),
             row["password_hash"].c_str(),
-            static_cast<Role>(row["role"].as<int>()),
+            row["role"].c_str(),
             row["must_change_password"].as<bool>()
         );
         return user;
@@ -48,7 +48,7 @@ bool PgUserRepository::saveUser(const User& user) {
         txn.exec_prepared("insert_user",
                           user.getUsername(),
                           user.getPasswordHash(),
-                          static_cast<int>(user.getRole()),
+                          user.getRole(),
                           user.getMustChangePassword());
 
         txn.commit();
@@ -69,7 +69,7 @@ bool PgUserRepository::updateUser(const User& user) {
 
         txn.exec_prepared("update_user",
                           user.getPasswordHash(),
-                          static_cast<int>(user.getRole()),
+                          user.getRole(),
                           user.getMustChangePassword(),
                           user.getUsername());
 
@@ -116,6 +116,23 @@ bool PgUserRepository::addExpiredToken(const std::string& token) {
     }
 }
 
+bool PgUserRepository::deleteUser(const std::string& username) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    try {
+        pqxx::connection c(connectionString);
+        pqxx::work txn(c);
+
+        c.prepare("delete_user", "DELETE FROM users WHERE username = $1");
+        pqxx::result r = txn.exec_prepared("delete_user", username);
+
+        txn.commit();
+        return r.affected_rows() > 0;
+    } catch (const std::exception& e) {
+        std::cerr << "DB error in deleteUser: " << e.what() << std::endl;
+        return false;
+    }
+}
+
 std::vector<User> PgUserRepository::getAllUsers() {
     std::lock_guard<std::mutex> lock(mutex_);
     std::vector<User> users;
@@ -127,7 +144,7 @@ std::vector<User> PgUserRepository::getAllUsers() {
             User user(
                 row[1].as<std::string>(),
                 row[2].as<std::string>(),
-                static_cast<Role>(row[3].as<int>()),
+                row[3].as<std::string>(),
                 row[4].as<bool>()
             );
             users.push_back(user);

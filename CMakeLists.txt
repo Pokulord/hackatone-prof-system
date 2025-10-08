@@ -22,6 +22,7 @@ add_executable(AuthServer
     src/Entities/User.cpp
     src/UseCases/UserService.cpp
     src/InterfaceAdapters/PgUserRepository.cpp
+    src/InterfaceAdapters/RefreshTokenService.cpp
     src/jwt_utils.cpp
     src/loadenv.cpp
 )

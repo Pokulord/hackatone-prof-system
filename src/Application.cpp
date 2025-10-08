@@ -49,7 +49,7 @@ Application::Application() {
 
     if (isUsersTableEmpty(connStr)) {
         std::cout << "Users table is empty. Creating default admin user." << std::endl;
-        if (!userService->createUser("admin", "admin123", Role::ADMIN, true)) {
+        if (!userService->createUser("admin", "admin123", "admin", true, true)) {
             std::cerr << "Failed to create admin user" << std::endl;
         }
     }

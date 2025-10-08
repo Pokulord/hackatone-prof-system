@@ -1,14 +1,15 @@
 #include "RefreshTokenService.h"
+#include <stdexcept>
 
 RefreshTokenService::RefreshTokenService(IUserRepository& repo, JwtUtils& jwt)
-    : tokenRepo(repo), jwtUtils(jwt) {}
+    : userRepo(repo), jwtUtils(jwt) {}
 
 bool RefreshTokenService::isTokenRevoked(const std::string& token) {
-    return tokenRepo.isTokenRevoked(token);
+    return userRepo.isTokenRevoked(token);
 }
 
 bool RefreshTokenService::revokeToken(const std::string& token) {
-    return tokenRepo.revokeToken(token);
+    return userRepo.addExpiredToken(token);
 }
 
 std::string RefreshTokenService::refreshToken(const std::string& oldToken) {
@@ -21,7 +22,7 @@ std::string RefreshTokenService::refreshToken(const std::string& oldToken) {
         throw std::runtime_error("Invalid token");
     }
 
-    auto userOpt = tokenRepo.getUserByUsername(username);
+    auto userOpt = userRepo.getUserByUsername(username);
     if (!userOpt) {
         throw std::runtime_error("User not found");
     }
@@ -30,6 +31,6 @@ std::string RefreshTokenService::refreshToken(const std::string& oldToken) {
         throw std::runtime_error("Failed to revoke token");
     }
 
-    std::string role = (userOpt->getRole() == Role::ADMIN) ? "admin" : "user";
+    std::string role = userOpt->getRole();
     return jwtUtils.generateToken(username, role);
 }
