@@ -36,16 +36,18 @@ add_executable(AuthServer
 )
 
 find_package(OpenSSL REQUIRED)
-find_path(PQXX_INCLUDE_DIR NAMES pqxx/pqxx PATHS "C:/Users/Merrow/vcpkg/installed/x64-windows/include" NO_DEFAULT_PATH)
 find_library(PQXX_LIBRARY NAMES pqxx)
 
-target_include_directories(AuthServer PRIVATE ${PQXX_INCLUDE_DIR})
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PQXX REQUIRED libpqxx)
+
+target_include_directories(AuthServer PRIVATE ${PQXX_INCLUDE_DIRS})
 
 find_package(Threads REQUIRED)
 target_link_libraries(AuthServer PRIVATE
     OpenSSL::SSL
     OpenSSL::Crypto
-    ${PQXX_LIBRARY}
+    ${PQXX_LIBRARIES}
     Threads::Threads
 )
 
