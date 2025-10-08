@@ -1,27 +1,25 @@
 #pragma once
 #include <string>
 
-enum class Role { ADMIN, ENGINEER, GUEST };
-
 class User {
 private:
     std::string username;
     std::string passwordHash;
-    Role role;
+    std::string role;
     bool mustChangePassword;
 
 public:
-    User(const std::string& username, const std::string& passwordHash, Role role, bool mustChangePassword);
+    User(const std::string& username, const std::string& passwordHash, const std::string& role, bool mustChangePassword);
 
     const std::string& getUsername() const;
     const std::string& getPasswordHash() const;
-    Role getRole() const;
+    const std::string& getRole() const;
     bool getMustChangePassword() const;
 
     void setPasswordHash(const std::string& newPasswordHash);
     void setMustChangePassword(bool value);
     void setPassword(const std::string& newPassword);
-    void setRole(Role newRole);
+    void setRole(const std::string& newRole);
 
     bool verifyPassword(const std::string& password) const;
     static std::string hashPassword(const std::string& password);

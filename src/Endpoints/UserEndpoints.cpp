@@ -32,7 +32,7 @@ void registerUserEndpoints(crow::SimpleApp& app, UserService& userService, JwtUt
             for (const auto& user : users) {
                 crow::json::wvalue u;
                 u["username"] = user.getUsername();
-                u["role"] = (user.getRole() == Role::ADMIN) ? "admin" : "user";
+                u["role"] = user.getRole();
                 u["mustChangePassword"] = user.getMustChangePassword();
                 userList.push_back(std::move(u));
             }
@@ -68,7 +68,7 @@ void registerUserEndpoints(crow::SimpleApp& app, UserService& userService, JwtUt
 
             crow::json::wvalue res;
             res["username"] = userOpt->getUsername();
-            res["role"] = (userOpt->getRole() == Role::ADMIN) ? "admin" : "user";
+            res["role"] = userOpt->getRole();
             res["mustChangePassword"] = userOpt->getMustChangePassword();
 
             return crow::response(res);
@@ -106,7 +106,7 @@ void registerUserEndpoints(crow::SimpleApp& app, UserService& userService, JwtUt
 
             crow::json::wvalue res;
             res["username"] = userOpt->getUsername();
-            res["role"] = (userOpt->getRole() == Role::ADMIN) ? "admin" : "user";
+            res["role"] = userOpt->getRole();
             res["mustChangePassword"] = userOpt->getMustChangePassword();
 
             return crow::response(res);
@@ -140,7 +140,7 @@ void registerUserEndpoints(crow::SimpleApp& app, UserService& userService, JwtUt
             }
 
             std::optional<std::string> newPassword;
-            std::optional<Role> newRole;
+            std::optional<std::string> newRole;
             std::optional<bool> newMustChangePassword;
 
             bool isOwnProfile = (requesterUsername == usernameToUpdate);
@@ -156,11 +156,7 @@ void registerUserEndpoints(crow::SimpleApp& app, UserService& userService, JwtUt
 
             if (json_body.has("role")) {
                 if (isAdmin) {
-                    std::string roleStr = json_body["role"].s();
-                    if (roleStr == "admin") newRole = Role::ADMIN;
-                    else if (roleStr == "engineer") newRole = Role::ENGINEER;
-                    else if (roleStr == "guest") newRole = Role::GUEST;
-                    else return crow::response(400, "Invalid role");
+                    newRole = json_body["role"].s();
                 } else {
                     return crow::response(403, "Forbidden: Only admins can change roles.");
                 }
@@ -169,7 +165,8 @@ void registerUserEndpoints(crow::SimpleApp& app, UserService& userService, JwtUt
             if (json_body.has("mustChangePassword")) {
                 if (isAdmin) {
                     newMustChangePassword = json_body["mustChangePassword"].b();
-                } else {
+                }
+                else {
                     return crow::response(403, "Forbidden: Only admins can change this setting.");
                 }
             }
@@ -251,13 +248,7 @@ void registerUserEndpoints(crow::SimpleApp& app, UserService& userService, JwtUt
                 return crow::response(400, "Invalid JSON or missing 'role' field");
             }
 
-            std::optional<Role> newRole;
-            std::string roleStr = json_body["role"].s();
-            if (roleStr == "admin") newRole = Role::ADMIN;
-            else if (roleStr == "engineer") newRole = Role::ENGINEER;
-            else if (roleStr == "guest") newRole = Role::GUEST;
-
-            else return crow::response(400, "Invalid role");
+            std::optional<std::string> newRole = json_body["role"].s();
 
             if (userService.updateUser(usernameToUpdate, std::nullopt, newRole, std::nullopt)) {
                 return crow::response(200, "User role updated successfully.");

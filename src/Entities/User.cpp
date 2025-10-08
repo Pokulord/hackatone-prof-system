@@ -3,12 +3,12 @@
 #include <sstream>
 #include <iomanip>
 
-User::User(const std::string& username, const std::string& passwordHash, Role role, bool mustChangePassword)
+User::User(const std::string& username, const std::string& passwordHash, const std::string& role, bool mustChangePassword)
     : username(username), passwordHash(passwordHash), role(role), mustChangePassword(mustChangePassword) {}
 
 const std::string& User::getUsername() const { return username; }
 const std::string& User::getPasswordHash() const { return passwordHash; }
-Role User::getRole() const { return role; }
+const std::string& User::getRole() const { return role; }
 bool User::getMustChangePassword() const { return mustChangePassword; }
 void User::setPasswordHash(const std::string& newPasswordHash) { passwordHash = newPasswordHash; }
 void User::setMustChangePassword(bool value) { mustChangePassword = value; }
@@ -17,7 +17,7 @@ void User::setPassword(const std::string& newPassword) {
     passwordHash = hashPassword(newPassword);
 }
 
-void User::setRole(Role newRole) {
+void User::setRole(const std::string& newRole) {
     role = newRole;
 }
 
