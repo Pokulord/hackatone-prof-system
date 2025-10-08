@@ -6,5 +6,6 @@ void registerEndpoints(crow::SimpleApp& app, UserService& userService, JwtUtils&
                         RefreshTokenService& refreshService, PgUserRepository& userRepo) {
     registerAuthEndpoints(app, userService, jwtUtils, refreshService, userRepo);
     registerUserEndpoints(app, userService, jwtUtils);
+    registerMonitoringEndpoints(app);
 }
 

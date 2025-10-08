@@ -21,9 +21,8 @@ bool isUsersTableEmpty(const std::string& connStr) {
 
 Application::Application() {
     setlocale(LC_ALL, "ru_RU.utf8");
-    if (EnvLoader::load_file(".env") < 0) {
+    if (EnvLoader::load_file(".env") < 0)
         throw std::runtime_error("Failed to open .env");
-    }
 
     const char* dbname_env = std::getenv("DB_NAME");
     const char* dbuser_env = std::getenv("DB_USER");

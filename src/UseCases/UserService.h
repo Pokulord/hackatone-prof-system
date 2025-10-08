@@ -5,6 +5,7 @@
 #include <optional>
 #include <unordered_map>
 #include <mutex>
+#include <vector>
 
 class IUserRepository;
 

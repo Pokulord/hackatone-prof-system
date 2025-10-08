@@ -19,6 +19,7 @@ add_executable(AuthServer
     src/Endpoints/endpoints.cpp
     src/Endpoints/AuthEndpoints.cpp
     src/Endpoints/UserEndpoints.cpp
+    src/Endpoints/MonitoringEndpoints.cpp
     src/Entities/User.cpp
     src/UseCases/UserService.cpp
     src/InterfaceAdapters/PgUserRepository.cpp
