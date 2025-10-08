@@ -1,4 +1,6 @@
+#include "activeSessions_window.h"
 #include "admin_window.h"
+#include "auditLog_window.h"
 #include "statistics_window.h"
 #include "ui_admin_window.h"
 #include "usersInfo_window.h"
@@ -55,11 +57,27 @@ void AdminWindow::onUsersClicked() {
 }
 
 void AdminWindow::onSessionsClicked() {
-    statusBar()->showMessage("Активные сессии");
+    ActiveSessionsWindow *sessionsWindow = new ActiveSessionsWindow();
+    sessionsWindow->setAttribute(Qt::WA_DeleteOnClose);
+    sessionsWindow->show();
+    this->hide();
+
+    connect(sessionsWindow, &ActiveSessionsWindow::windowClosed, this, [this]() {
+        this->show();
+        this->activateWindow();
+    });
 }
 
 void AdminWindow::onLogsClicked() {
-    statusBar()->showMessage("Журнал аудита");
+    AuditLogWindow *sessionsWindow = new AuditLogWindow();
+    sessionsWindow->setAttribute(Qt::WA_DeleteOnClose);
+    sessionsWindow->show();
+    this->hide();
+
+    connect(sessionsWindow, &AuditLogWindow::windowClosed, this, [this]() {
+        this->show();
+        this->activateWindow();
+    });
 }
 
 AdminWindow::~AdminWindow()

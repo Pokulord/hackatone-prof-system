@@ -38,6 +38,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         statistics_window.h statistics_window.cpp
         activeSessions_window.h activeSessions_window.cpp
         activeSessions_window.ui
+        auditLog_window.h auditLog_window.cpp
+        auditLog_window.ui
 
 
 

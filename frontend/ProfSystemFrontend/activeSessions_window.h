@@ -4,9 +4,11 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 
+QT_BEGIN_NAMESPACE
 namespace Ui {
 class ActiveSessionsWindow;
 }
+QT_END_NAMESPACE
 
 class ActiveSessionsWindow : public QMainWindow
 {

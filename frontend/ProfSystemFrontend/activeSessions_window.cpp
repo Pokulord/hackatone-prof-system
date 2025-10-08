@@ -17,6 +17,8 @@ ActiveSessionsWindow::ActiveSessionsWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Активные сессии");
+    setWindowIcon(QIcon("B:/hackatone-prof-system/frontend/ProfSystemFrontend/resources/logo.jpg"));
+
     setMinimumSize(1000, 600);
 
     setupUI();
