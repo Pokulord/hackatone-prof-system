@@ -9,6 +9,9 @@
 #include <QInputDialog>
 #include <QVBoxLayout>
 #include <QCloseEvent>
+#include <QDir>
+#include <QFileDialog>
+
 
 UsersInfoWindow::UsersInfoWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -39,11 +42,13 @@ void UsersInfoWindow::setupToolbar()
     QAction *editAction = toolbar->addAction("✏️ Редактировать");
     QAction *deleteAction = toolbar->addAction("🗑️ Удалить");
     QAction *refreshAction = toolbar->addAction("🔄 Обновить");
+    QAction *exportAction = toolbar->addAction("📊 Экспорт в Excel");
 
     connect(addAction, &QAction::triggered, this, &UsersInfoWindow::onAddUserClicked);
     connect(editAction, &QAction::triggered, this, &UsersInfoWindow::onEditUserClicked);
     connect(deleteAction, &QAction::triggered, this, &UsersInfoWindow::onDeleteUserClicked);
     connect(refreshAction, &QAction::triggered, this, &UsersInfoWindow::onRefreshClicked);
+    connect(exportAction, &QAction::triggered, this, &UsersInfoWindow::onExportToExcelClicked);
 }
 
 void UsersInfoWindow::setupTable()
@@ -194,4 +199,75 @@ void UsersInfoWindow::closeEvent(QCloseEvent *event)
 UsersInfoWindow::~UsersInfoWindow()
 {
     delete ui;
+}
+
+void UsersInfoWindow::onExportToExcelClicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        "Экспорт в Excel",
+        QDir::homePath() + "/Пользователи_" + QDateTime::currentDateTime().toString("yyyy-MM-dd") + ".csv",
+        "CSV Files (*.csv);;All Files (*)"
+        );
+
+    if (fileName.isEmpty()) {
+        return; // Пользователь отменил
+    }
+
+    if (!fileName.endsWith(".csv", Qt::CaseInsensitive)) {
+        fileName += ".csv";
+    }
+
+    if (exportTableToExcel(fileName)) {
+        statusBar()->showMessage("Данные экспортированы в: " + fileName, 5000);
+        QMessageBox::information(this, "Успех", "Данные успешно экспортированы в файл:\n" + fileName);
+    } else {
+        statusBar()->showMessage("Ошибка при экспорте данных", 5000);
+        QMessageBox::critical(this, "Ошибка", "Не удалось экспортировать данные в файл:\n" + fileName);
+    }
+}
+
+bool UsersInfoWindow::exportTableToExcel(const QString &filePath)
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return false;
+    }
+
+    QTextStream stream(&file);
+
+    stream.setEncoding(QStringConverter::System);
+
+    QTableWidget *table = ui->usersTable;
+
+    QString delimiter = ";";
+
+    QStringList headers;
+    for (int i = 0; i < table->columnCount(); ++i) {
+        headers << table->horizontalHeaderItem(i)->text();
+    }
+    stream << headers.join(delimiter) << "\n";
+
+    for (int row = 0; row < table->rowCount(); ++row) {
+        QStringList rowData;
+        for (int col = 0; col < table->columnCount(); ++col) {
+            QTableWidgetItem *item = table->item(row, col);
+            QString text = item ? item->text() : "";
+
+            if (col == 2 && !text.isEmpty()) {
+                text = "=\"" + text + "\"";
+            }
+
+            if (text.contains(delimiter) || text.contains("\"") || text.contains("\n")) {
+                text.replace("\"", "\"\"");
+                text = "\"" + text + "\"";
+            }
+
+            rowData << text;
+        }
+        stream << rowData.join(delimiter) << "\n";
+    }
+
+    file.close();
+    return true;
 }

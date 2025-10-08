@@ -1,6 +1,6 @@
 #include "auth_window.h"
 #include "ui_auth_window.h"
-#include "change_adminpass_window.h"
+#include "change_adminpass_dialog.h"
 #include "admin_window.h"
 #include <QCheckBox>
 #include <QLineEdit>
@@ -9,6 +9,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDebug>
+#include <QMessageBox>
 
 namespace StyleConstants {
     const QString FONT_FAMILY = "Arial";
@@ -207,7 +208,7 @@ void AuthWindow::handleSuccessfulLogin()
 
 void AuthWindow::showPasswordChangeDialog()
 {
-    ChangeAdminPassWindow dialog(this);
+    ChangeAdminPassDialog dialog(this);
 
     int result = dialog.exec();
 

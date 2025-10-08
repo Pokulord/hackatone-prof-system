@@ -23,8 +23,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ProfSystemFrontend
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        change_adminpass_window.h change_adminpass_window.cpp
-        change_adminpass_window.ui
+        change_adminpass_dialog.h change_adminpass_dialog.cpp
+        change_adminpass_dialog.ui
         admin_window.h admin_window.cpp
         admin_window.h admin_window.cpp admin_window.ui
         usersInfo_window.h usersInfo_window.cpp

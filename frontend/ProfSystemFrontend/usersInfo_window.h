@@ -22,6 +22,7 @@ private slots:
     void onDeleteUserClicked();
     void onEditUserClicked();
     void onRefreshClicked();
+    void onExportToExcelClicked();
 
 signals:
     void windowClosed();
@@ -33,6 +34,7 @@ private:
     void setupToolbar();
     void setupTable();
     void loadUsers();
+    bool exportTableToExcel(const QString &filePath);
 
     Ui::UsersInfoWindow *ui;
 };

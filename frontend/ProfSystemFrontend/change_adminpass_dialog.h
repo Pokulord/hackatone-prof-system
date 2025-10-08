@@ -1,21 +1,21 @@
-#ifndef CHANGE_ADMINPASS_WINDOW_H
-#define CHANGE_ADMINPASS_WINDOW_H
+#ifndef CHANGE_ADMINPASS_DIALOG_H
+#define CHANGE_ADMINPASS_DIALOG_H
 
 #include <QDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class ChangeAdminPassWindow;
+class ChangeAdminPassDialog;
 }
 QT_END_NAMESPACE
 
-class ChangeAdminPassWindow : public QDialog
+class ChangeAdminPassDialog : public QDialog
 {
     Q_OBJECT
 
     public:
-        explicit ChangeAdminPassWindow(QWidget *parent = nullptr);
-        ~ChangeAdminPassWindow();
+        explicit ChangeAdminPassDialog(QWidget *parent = nullptr);
+        ~ChangeAdminPassDialog();
 
     private slots:
         void onShowPasswordToggled(bool checked);
@@ -26,7 +26,7 @@ class ChangeAdminPassWindow : public QDialog
         void setupStyles();
 
     private:
-        Ui::ChangeAdminPassWindow *ui;
+        Ui::ChangeAdminPassDialog *ui;
 };
 
-#endif // CHANGE_ADMINPASS_WINDOW_H
+#endif // CHANGE_ADMINPASS_DIALOG_H

@@ -8,7 +8,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    AuthWindow auth;
+    AdminWindow auth;
     auth.show();
     return a.exec();
 }

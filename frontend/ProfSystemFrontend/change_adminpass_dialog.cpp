@@ -1,13 +1,13 @@
-#include "change_adminpass_window.h"
-#include "ui_change_adminpass_window.h"
+#include "change_adminpass_dialog.h"
+#include "ui_change_adminpass_dialog.h"
 #include <QMessageBox>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-ChangeAdminPassWindow::ChangeAdminPassWindow(QWidget *parent)
+ChangeAdminPassDialog::ChangeAdminPassDialog(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::ChangeAdminPassWindow)
+    , ui(new Ui::ChangeAdminPassDialog)
 {
     ui->setupUi(this);
 
@@ -20,15 +20,15 @@ ChangeAdminPassWindow::ChangeAdminPassWindow(QWidget *parent)
 
     setupCenteredLayout();
 
-    connect(ui->pushButton, &QPushButton::clicked, this, &ChangeAdminPassWindow::onChangePasswordClicked);
-    connect(ui->passwordEdit, &QLineEdit::textChanged, this, &ChangeAdminPassWindow::onPasswordTextChanged);
-    connect(ui->showPasswordCheckbox, &QCheckBox::toggled, this, &ChangeAdminPassWindow::onShowPasswordToggled);
+    connect(ui->pushButton, &QPushButton::clicked, this, &ChangeAdminPassDialog::onChangePasswordClicked);
+    connect(ui->passwordEdit, &QLineEdit::textChanged, this, &ChangeAdminPassDialog::onPasswordTextChanged);
+    connect(ui->showPasswordCheckbox, &QCheckBox::toggled, this, &ChangeAdminPassDialog::onShowPasswordToggled);
 
     ui->errorLabel->setVisible(false);
     ui->passwordEdit->setFocus();
 }
 
-void ChangeAdminPassWindow::setupStyles()
+void ChangeAdminPassDialog::setupStyles()
 {
     QFont defaultFont("Arial", 12);
     QFont smallFont("Arial", 10);
@@ -94,7 +94,7 @@ void ChangeAdminPassWindow::setupStyles()
     ui->passwordEdit->setPlaceholderText("Введите новый пароль...");
 }
 
-void ChangeAdminPassWindow::setupCenteredLayout()
+void ChangeAdminPassDialog::setupCenteredLayout()
 {
     QHBoxLayout *horizontalLayout = new QHBoxLayout(this);
     QVBoxLayout *verticalLayout = new QVBoxLayout();
@@ -108,7 +108,7 @@ void ChangeAdminPassWindow::setupCenteredLayout()
     verticalLayout->addStretch();
 }
 
-void ChangeAdminPassWindow::setupUI()
+void ChangeAdminPassDialog::setupUI()
 {
     ui->groupBox->setMinimumSize(0, 0);
     ui->groupBox->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
@@ -120,7 +120,7 @@ void ChangeAdminPassWindow::setupUI()
         "   border: 2px solid #bdc3c7;"
         "   border-radius: 8px;"
         "   margin-top: 10px;"
-        "   padding: 20px;"  // ← ДОБАВЬ ОТСТУПЫ ВНУТРИ
+        "   padding: 20px;"
         "}"
         "QGroupBox::title {"
         "   subcontrol-origin: margin;"
@@ -147,7 +147,7 @@ void ChangeAdminPassWindow::setupUI()
     ui->errorLabel->setWordWrap(true);
 }
 
-void ChangeAdminPassWindow::onPasswordTextChanged()
+void ChangeAdminPassDialog::onPasswordTextChanged()
 {
     QString password = ui->passwordEdit->text();
 
@@ -164,7 +164,7 @@ void ChangeAdminPassWindow::onPasswordTextChanged()
     password.fill('0');
 }
 
-void ChangeAdminPassWindow::onChangePasswordClicked()
+void ChangeAdminPassDialog::onChangePasswordClicked()
 {
     QString newPassword = ui->passwordEdit->text();
 
@@ -209,12 +209,12 @@ void ChangeAdminPassWindow::onChangePasswordClicked()
     accept();
 }
 
-void ChangeAdminPassWindow::onShowPasswordToggled(bool checked)
+void ChangeAdminPassDialog::onShowPasswordToggled(bool checked)
 {
     ui->passwordEdit->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
 }
 
-ChangeAdminPassWindow::~ChangeAdminPassWindow()
+ChangeAdminPassDialog::~ChangeAdminPassDialog()
 {
     delete ui;
 }
