@@ -221,4 +221,49 @@ void registerUserEndpoints(crow::SimpleApp& app, UserService& userService, JwtUt
             }
         }
     );
+
+    CROW_ROUTE(app, "/api/users/<string>/roles").methods(crow::HTTPMethod::Patch)(
+        [&jwtUtils, &userService](const crow::request& req, const std::string& usernameToUpdate) {
+            auto authHeader = req.get_header_value("Authorization");
+            if (authHeader.substr(0, 7) != "Bearer ") {
+                return crow::response(401, "Unauthorized");
+            }
+            std::string token = authHeader.substr(7);
+            std::string requesterRole;
+
+            try {
+                auto decoded = jwt::decode(token);
+                auto verifier = jwt::verify()
+                    .allow_algorithm(jwt::algorithm::hs256{"supersecretkey"})
+                    .with_issuer("auth_server");
+                verifier.verify(decoded);
+                requesterRole = decoded.get_payload_claim("role").as_string();
+            } catch (...) {
+                return crow::response(401, "Invalid token");
+            }
+
+            if (requesterRole != "admin") {
+                return crow::response(403, "Forbidden: Admins only");
+            }
+
+            auto json_body = crow::json::load(req.body);
+            if (!json_body || !json_body.has("role")) {
+                return crow::response(400, "Invalid JSON or missing 'role' field");
+            }
+
+            std::optional<Role> newRole;
+            std::string roleStr = json_body["role"].s();
+            if (roleStr == "admin") newRole = Role::ADMIN;
+            else if (roleStr == "engineer") newRole = Role::ENGINEER;
+            else if (roleStr == "guest") newRole = Role::GUEST;
+
+            else return crow::response(400, "Invalid role");
+
+            if (userService.updateUser(usernameToUpdate, std::nullopt, newRole, std::nullopt)) {
+                return crow::response(200, "User role updated successfully.");
+            } else {
+                return crow::response(404, "User not found or update failed.");
+            }
+        }
+    );
 }
