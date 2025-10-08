@@ -4,3 +4,7 @@
 [2025-10-08 18:23:34] [WARNING] Registration failed for user: rest. User may already exist or role is invalid.
 [2025-10-08 18:23:40] [INFO] POST /api/auth/register from 127.0.0.1
 [2025-10-08 18:23:40] [INFO] User registered successfully: ressss
+[2025-10-08 21:30:53] [INFO] POST /api/auth/register from 127.0.0.1
+[2025-10-08 21:30:53] [WARNING] Registration failed for user: ressss. User may already exist or role is invalid.
+[2025-10-08 21:30:58] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-08 21:30:58] [INFO] User authenticated successfully: rest

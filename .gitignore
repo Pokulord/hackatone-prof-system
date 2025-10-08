@@ -1,7 +1,3 @@
 build
-.gemini
-auth-service-spec.md
-speka.md
 .vscode
-api points.txt
-ctx.txt
+.env
