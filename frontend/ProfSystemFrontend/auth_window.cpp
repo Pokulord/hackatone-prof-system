@@ -12,6 +12,10 @@
 #include <QMessageBox>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QStandardPaths>
+#include <QDir>
+#include <QFile>
+#include <QDebug>
 
 
 namespace StyleConstants {
@@ -102,6 +106,7 @@ namespace StyleConstants {
         setWindowIcon(QIcon("B:/hackatone-prof-system/frontend/ProfSystemFrontend/resources/logo.jpg"));
     }
 
+
 void AuthWindow::setupStyles()
 {
     QFont defaultFont(StyleConstants::FONT_FAMILY, StyleConstants::DEFAULT_FONT_SIZE);
@@ -184,6 +189,40 @@ void AuthWindow::onShowPasswordToggled(bool checked)
     ui->passwordEdit->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
 }
 
+
+
+
+bool saveJwtTokenToHome(const QString& token)
+{
+    QString homeDir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    if (homeDir.isEmpty()) {
+        qWarning() << "Не удалось получить домашнюю директорию пользователя";
+        return false;
+    }
+
+    QString tokenFilePath = QDir(homeDir).filePath(".user_jwt.token");
+    QFile tokenFile(tokenFilePath);
+    if (!tokenFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        qWarning() << "Не удалось открыть файл для записи токена:" << tokenFilePath;
+        return false;
+    }
+
+    QByteArray data = token.toUtf8();
+    if (tokenFile.write(data) != data.size()) {
+        tokenFile.close();
+        qWarning() << "Не удалось записать токен полностью:" << tokenFilePath;
+        return false;
+    }
+    tokenFile.close();
+
+#if defined(Q_OS_UNIX)
+    QFile::setPermissions(tokenFilePath, QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+#endif
+
+    qInfo() << "JWT успешно сохранён:" << tokenFilePath;
+    return true;
+}
+
 void AuthWindow::onLoginClicked()
 {
     const QString username = ui->usernameEdit->text();
@@ -229,12 +268,14 @@ void AuthWindow::onLoginResponse(const QByteArray& response)
     }
     QJsonObject obj = json.object();
     if (obj.contains("access_token")) {
+        QString jwtToken = obj["access_token"].toString();
+        saveJwtTokenToHome(jwtToken);
         bool mustChangePassword = obj["mustChangePassword"].toBool();
         QString role = obj.value("role").toString();
         failedAttempts = 0;
         isRateLimited = false;
         ui->errorLabel->setVisible(false);
-        if (role == "Admin")
+        if (role == "admin")
         {
             if (mustChangePassword) {
                 showPasswordChangeDialog();
