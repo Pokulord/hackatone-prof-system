@@ -42,6 +42,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         auditLog_window.ui
         ApiClient.h
         ApiClient.cpp
+        usersapiqt.h
+        usersapiqt.cpp
 
 
 

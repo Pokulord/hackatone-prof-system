@@ -12,7 +12,6 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QDebug>
-#include <QNetworkAccessManager>
 
 ChangeAdminPassDialog::ChangeAdminPassDialog(QWidget *parent)
     : QDialog(parent)
@@ -21,10 +20,9 @@ ChangeAdminPassDialog::ChangeAdminPassDialog(QWidget *parent)
 {
     ui->setupUi(this);
 
-    setWindowTitle("Смена пароля администратора");
+    setWindowTitle("Смена пароля пользователя");
     setFixedSize(500, 400);
     setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
-
     setupStyles();
     setupCenteredLayout();
 
@@ -40,10 +38,6 @@ ChangeAdminPassDialog::~ChangeAdminPassDialog()
 {
     delete ui;
 }
-
-
-
-
 
 void ChangeAdminPassDialog::setupStyles()
 {
@@ -114,6 +108,18 @@ void ChangeAdminPassDialog::onPasswordTextChanged()
     password.fill('0');
 }
 
+QString ChangeAdminPassDialog::loadJwtToken(const QString& username)
+{
+    QString homeDir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    QString tokenFilePath = QDir(homeDir).filePath(".user_jwt.token");
+    QFile tokenFile(tokenFilePath);
+    if (!tokenFile.open(QIODevice::ReadOnly))
+        return QString();
+    QByteArray data = tokenFile.readAll();
+    tokenFile.close();
+    return QString::fromUtf8(data);
+}
+
 void ChangeAdminPassDialog::onChangePasswordClicked()
 {
     QString newPassword = ui->passwordEdit->text();
@@ -122,105 +128,39 @@ void ChangeAdminPassDialog::onChangePasswordClicked()
         ui->errorLabel->setVisible(true);
         return;
     }
-
     ui->errorLabel->setVisible(false);
 
-    // Выполнить логин: получите логин/пароль админа из соответствующих полей/настроек
-    QString adminUsername = "admin";     // Получите, например, из отдельного поля UI
-    QString adminPassword = "adminpass"; // Получите безопасно
-
-    login(adminUsername, adminPassword);
+    QString username = "admin"; // Либо возьмите из поля или из внешнего класса
+    changeUserPassword(username, newPassword);
 }
 
-void ChangeAdminPassDialog::login(const QString& username, const QString& password)
+void ChangeAdminPassDialog::changeUserPassword(const QString& username, const QString& newPassword)
 {
-    QUrl url("http://127.0.0.1:18080/api/auth/login");
+    QUrl url(QString("http://127.0.0.1:18080/api/users/%1").arg(username));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QString jwtToken = loadJwtToken(username);
+    request.setRawHeader("Authorization", ("Bearer " + jwtToken).toUtf8());
 
-    QJsonObject json;
-    json["username"] = username;
-    json["password"] = password;
-    QJsonDocument doc(json);
+    QJsonObject payloadObj;
+    payloadObj["password"] = newPassword;
+    payloadObj["mustChangePassword"] = false;
+    QJsonDocument doc(payloadObj);
 
-    QNetworkReply* reply = networkManager->post(request, doc.toJson());
-    connect(reply, &QNetworkReply::finished, this, &ChangeAdminPassDialog::onLoginFinished);
+    QNetworkReply* reply = networkManager->put(request, doc.toJson());
+    connect(reply, &QNetworkReply::finished, this, &ChangeAdminPassDialog::onPasswordChangedInDB);
 }
 
-void ChangeAdminPassDialog::onLoginFinished()
+void ChangeAdminPassDialog::onPasswordChangedInDB()
 {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
     if (!reply) return;
 
     if (reply->error() == QNetworkReply::NoError) {
-        QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->readAll());
-        if (!jsonResponse.isNull() && jsonResponse.isObject()) {
-            QJsonObject obj = jsonResponse.object();
-            if (obj.contains("accesstoken")) {
-                QString token = obj["accesstoken"].toString();
-                if (saveJwtTokenToFile(token)) {
-                    QMessageBox::information(this, "Успех", "JWT сохранён.");
-                } else {
-                    QMessageBox::warning(this, "Внимание", "JWT получен, но сохранить не удалось.");
-                }
-                // Здесь далее можно отправлять запрос на смену пароля с этим JWT токеном
-            }
-        }
+        QMessageBox::information(this, "Успех", "Пароль успешно изменён!");
+        accept();
     } else {
-        QMessageBox::critical(this, "Ошибка сети", reply->errorString());
+        QMessageBox::critical(this, "Ошибка", "Ошибка изменения пароля: " + reply->errorString());
     }
     reply->deleteLater();
-}
-
-
-
-
-void ChangeAdminPassDialog::onPasswordChangedInDB()
-{
-    // Реализуйте/допишите нужную логику тут
-    qDebug() << "Слот: onPasswordChangedInDB вызван!";
-}
-
-void ChangeAdminPassDialog::onMustChangePasswordUpdated()
-{
-    // Реализуйте/допишите нужную логику тут
-    qDebug() << "Слот: onMustChangePasswordUpdated вызван!";
-}
-
-
-bool ChangeAdminPassDialog::saveJwtTokenToFile(const QString& token)
-{
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    if (configDir.isEmpty()) {
-        qWarning() << "Не удалось получить директорию для конфигурационных файлов!";
-        return false;
-    }
-
-    QDir dir(configDir);
-    if (!dir.exists() && !dir.mkpath(".")) {
-        qWarning() << "Не удалось создать конфиг директорию:" << configDir;
-        return false;
-    }
-
-    QString tokenFilePath = dir.filePath("admin_jwt.token");
-    QFile tokenFile(tokenFilePath);
-    if (!tokenFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        qWarning() << "Не удалось открыть файл для записи токена:" << tokenFilePath;
-        return false;
-    }
-
-    QByteArray data = token.toUtf8();
-    if (tokenFile.write(data) != data.size()) {
-        tokenFile.close();
-        qWarning() << "Не удалось записать токен полностью!" << tokenFilePath;
-        return false;
-    }
-    tokenFile.close();
-
-#if defined(Q_OS_UNIX)
-    QFile::setPermissions(tokenFilePath, QFileDevice::ReadOwner | QFileDevice::WriteOwner);
-#endif
-
-    qInfo() << "JWT успешно сохранён:" << tokenFilePath;
-    return true;
 }

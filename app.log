@@ -48,3 +48,65 @@
 [2025-10-09 07:36:09] [INFO] User authenticated successfully: admin
 [2025-10-09 07:36:13] [INFO] POST /api/auth/login from 127.0.0.1
 [2025-10-09 07:36:13] [WARNING] Authentication failed for user: admin
+[2025-10-09 08:16:51] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 08:16:51] [INFO] User authenticated successfully: rest
+[2025-10-09 08:19:38] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 08:19:38] [INFO] User authenticated successfully: admin
+[2025-10-09 08:19:42] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 08:19:43] [WARNING] Authentication failed for user: admin
+[2025-10-09 08:20:26] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 08:20:26] [INFO] User authenticated successfully: rest
+[2025-10-09 08:20:40] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 08:20:40] [INFO] User authenticated successfully: admin
+[2025-10-09 08:21:04] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 08:21:04] [INFO] User authenticated successfully: admin
+[2025-10-09 08:29:39] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 08:29:39] [WARNING] Authentication failed for user: admin
+[2025-10-09 08:29:46] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 08:29:46] [INFO] User authenticated successfully: admin
+[2025-10-09 08:29:50] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 08:29:50] [WARNING] Authentication failed for user: admin
+[2025-10-09 08:37:03] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 08:37:04] [INFO] User authenticated successfully: admin
+[2025-10-09 08:37:07] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 08:44:33] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 08:50:46] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 08:50:46] [INFO] User 'admin' updated successfully by 'admin'.
+[2025-10-09 08:54:13] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 08:54:13] [INFO] User 'admin' updated successfully by 'admin'.
+[2025-10-09 08:55:27] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 08:55:27] [INFO] User 'admin' updated successfully by 'admin'.
+[2025-10-09 09:00:00] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 09:00:00] [WARNING] Authentication failed for user: admin
+[2025-10-09 09:00:13] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 09:00:13] [WARNING] Authentication failed for user: admin
+[2025-10-09 09:00:32] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 09:00:32] [WARNING] Authentication failed for user: admin
+[2025-10-09 09:00:45] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 09:00:45] [INFO] User authenticated successfully: rest
+[2025-10-09 09:02:18] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 09:02:18] [WARNING] Update user failed: Invalid JSON. User: admin
+[2025-10-09 09:02:27] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 09:02:27] [WARNING] Update user failed: Invalid JSON. User: admin
+[2025-10-09 09:02:32] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 09:02:32] [INFO] User 'admin' updated successfully by 'admin'.
+[2025-10-09 09:02:39] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 09:02:39] [INFO] User authenticated successfully: admin
+[2025-10-09 09:02:42] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 09:02:42] [INFO] User 'admin' updated successfully by 'admin'.
+[2025-10-09 09:02:52] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 09:02:52] [INFO] User 'admin' updated successfully by 'admin'.
+[2025-10-09 09:03:03] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 09:03:03] [INFO] User authenticated successfully: admin
+[2025-10-09 09:03:09] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 09:03:09] [INFO] User 'admin' updated successfully by 'admin'.
+[2025-10-09 09:04:31] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 09:04:31] [WARNING] Authentication failed for user: admn
+[2025-10-09 09:04:35] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 09:04:35] [WARNING] Authentication failed for user: admn
+[2025-10-09 09:04:45] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 09:04:45] [INFO] User authenticated successfully: admin
+[2025-10-09 09:04:50] [INFO] PUT /api/users/admin from 127.0.0.1
+[2025-10-09 09:04:50] [INFO] User 'admin' updated successfully by 'admin'.
+[2025-10-09 09:05:02] [INFO] POST /api/auth/login from 127.0.0.1
+[2025-10-09 09:05:02] [INFO] User authenticated successfully: admin

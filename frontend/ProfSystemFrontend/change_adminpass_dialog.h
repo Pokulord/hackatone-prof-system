@@ -22,19 +22,13 @@ private slots:
     void onShowPasswordToggled(bool checked);
     void onChangePasswordClicked();
     void onPasswordTextChanged();
-    void onLoginFinished();
     void onPasswordChangedInDB();
-    void onMustChangePasswordUpdated();
 
 private:
     void setupCenteredLayout();
-    void setupUI();
     void setupStyles();
-    void login(const QString& username, const QString& password);
-    bool saveJwtTokenToFile(const QString& token);
-    void changeAdminPassword(const QString& newPassword); // отправка нового пароля в БД
-    void updateMustChangePasswordFlag(const QString& username, bool mustChange); // универсальная функция для mustChangePassword
-    QString loadJwtToken(); // для подстановки токена из файла для авторизации
+    void changeUserPassword(const QString& username, const QString& newPassword);
+    QString loadJwtToken(const QString& username);
 
     Ui::ChangeAdminPassDialog *ui;
     QNetworkAccessManager* networkManager;
